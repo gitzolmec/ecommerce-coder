@@ -1,0 +1,72 @@
+<style>
+  .github-btn:hover {
+    background-color: #f0f0f0; /* Cambia el color de fondo cuando el mouse está sobre el botón */
+    border-color: #999; /* Cambia el color del borde cuando el mouse está sobre el botón */
+    cursor: pointer; /* Cambia el cursor a una mano para indicar que es clickable */
+  }
+</style>
+<header>
+  <nav class="navbar navbar-light bg-dark min-vw-100">
+    <img src="/img/logo-2019.png" width="300px" class="mx-auto"/>
+
+  </nav>
+</header>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <header class="card-header">
+          <h4 class="card-title mt-2">Iniciar sesión</h4>
+        </header>
+        <article class="card-body">
+          <form action="" id="loginForm">
+            <div class="form-group">
+              <label for="usernameInput">Nombre de usuario</label>
+              <input
+                type="email"
+                class="form-control"
+                id="usernameInput"
+                placeholder="Ingresa tu nombre de usuario"
+                name="email"
+              />
+            </div>
+            <div class="form-group">
+              <label for="passwordInput">Contraseña</label>
+              <input
+                type="password"
+                class="form-control"
+                id="passwordInput"
+                placeholder="Ingresa tu contraseña"
+                name="password"
+              />
+            </div>
+            <div class="form-group">
+              <button
+                type="submit"
+                class="btn btn-primary btn-block"
+                id="loginButton"
+              >Iniciar sesión</button>
+            </div class="form-group">
+            <a href="/api/passwordrecovery">Olvide mi contraseña</a>
+            
+             
+            <div>
+           <label>¿No tienes una cuenta? <a href="/api/signup">Registrate</a></label>
+
+            </div>
+            <p>O</p>
+               <div>
+  <a href="/api/auth/github" class="github-btn btn btn-default bg-white" >
+    <img src="https://logos-world.net/wp-content/uploads/2020/11/GitHub-Logo.png" style="width: 100px; border:solid; border:10px; border-radius:30px" >
+    Iniciar sesión con GitHub
+  </a></div>
+          </form>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/js/login.js"></script>
+ <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/js/bootstrap.min.js"></script>
