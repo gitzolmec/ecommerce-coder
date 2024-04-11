@@ -9,7 +9,7 @@ const {
   generarCodigoProducto,
 } = require("../utils/product-code-generator.util");
 const totalQuantity = require("../utils/total-quantity.util");
-const { getUserById } = require("./users.service");
+const { getUserById, getOwnerInfo } = require("./users.service");
 
 const Products = new ProductDAO();
 
@@ -61,7 +61,8 @@ const addProduct = async (productInfo, req) => {
       productInfo.owner = "admin";
       productInfo.code = generarCodigoProducto(productInfo.title);
       productInfo.status = "true";
-      return await Products.addProduct(productInfo.title);
+      logger.debug(productInfo);
+      return await Products.addProduct(productInfo);
     }
     if (role === "premium") {
       productInfo.owner = user.email;
@@ -140,7 +141,9 @@ const deleteProduct = async (id, req) => {
 };
 
 const getProductsByOwner = async (email) => {
-  const products = await Products.getProductsByOwner(email);
+  const owner = await getOwnerInfo(email);
+
+  const products = await Products.getProductsByOwner(email, owner);
   return products;
 };
 

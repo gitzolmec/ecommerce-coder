@@ -16,6 +16,9 @@ class UserDao {
       $push: { purchase_history: purchaseId },
     });
   }
+  async getOwnerInfo(email) {
+    return await Users.findOne({ email: email });
+  }
 
   async getPurchases(id) {
     const purchases = await Users.findById(id)

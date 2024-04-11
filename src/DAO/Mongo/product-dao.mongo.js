@@ -59,12 +59,23 @@ class ProductDAO {
     }
   }
 
-  async getProductsByOwner(email) {
+  async getProductsByOwner(email, owner) {
     try {
-      const products = await Products.find({
-        owner: email,
-        status: true,
-      }).lean();
+      if (owner.role === "admin") {
+        const products = await Products.find({
+          owner: "admin",
+          status: true,
+        }).lean();
+
+        return products;
+      }
+      if (owner.role === "premium") {
+        const products = await Products.find({
+          owner: email,
+          status: true,
+        }).lean();
+        return products;
+      }
 
       return products;
     } catch (error) {

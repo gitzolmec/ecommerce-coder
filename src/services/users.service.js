@@ -8,6 +8,9 @@ const Users = new UserDao();
 const getUserById = async (tokenId) => {
   return await Users.getUserById(tokenId);
 };
+const getOwnerInfo = async (email) => {
+  return await Users.getOwnerInfo(email);
+};
 
 const updateUser = async (id, data) => {
   return await Users.updateUser(id, data);
@@ -58,4 +61,5 @@ module.exports = {
   getUserListForAdmins,
   recoveryPassword,
   changePassword,
+  getOwnerInfo,
 };

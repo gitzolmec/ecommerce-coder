@@ -30,6 +30,7 @@ formProduct.addEventListener("submit", function (event) {
       return response.json();
     })
     .then((data) => {
+      window.location.reload();
       console.log("Los datos fueron enviados correctamente:", data);
     })
     .catch((error) => {
