@@ -63,7 +63,7 @@ class UserDao {
     const message = `este es tu link de recuperacion de clave: <a href=${resetLink}>${resetLink}</a>`;
     const MailInfo = await transporter.sendMail({
       from: '"8-bits 🎮" <jorgemorales.600@gmail.com>',
-      to: "jorgemorales_1991@hotmail.com",
+      to: email,
       subject: "Recuperacion de contraseña",
       text: `Hola ${first_name} ${last_name}`,
       html: message,

@@ -48,7 +48,6 @@ Handlebars.registerHelper("isEqualOr", function () {
   return options.inverse(this);
 });
 
-// Exporta los helpers
 module.exports = {
   registerHandlebarsHelpers: function () {},
 };

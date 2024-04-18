@@ -5,6 +5,8 @@ const authController = require("../controllers/auth.controller.js");
 const usersController = require("../controllers/users.controller.js");
 const viewsTemplateController = require("../controllers/views-template.controller");
 const testController = require("../test/controller/product-test.controller.js");
+const swagerUiExpress = require("swagger-ui-express");
+const specs = require("../utils/swagger/options.swagger.js");
 
 const router = (app) => {
   app.use("/api", viewsTemplateController);
@@ -14,6 +16,7 @@ const router = (app) => {
   app.use("/api/auth", authController);
   app.use("/api/users", usersController);
   app.use("/api/test", testController);
+  app.use("/api/docs", swagerUiExpress.serve, swagerUiExpress.setup(specs));
 };
 
 module.exports = router;

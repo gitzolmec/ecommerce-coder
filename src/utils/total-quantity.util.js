@@ -4,7 +4,7 @@ async function totalQuantity(cartId) {
   try {
     const cart = await Carts.findOne({ _id: cartId });
     if (!cart) {
-      logger.warn("Carrito no encontrado");
+      logger.warning("Carrito no encontrado");
       throw new Error("Carrito no encontrado");
     }
     const currentCart = cart.products;

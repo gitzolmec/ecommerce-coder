@@ -1,0 +1,327 @@
+openapi: 3.0.3
+info:
+  title: PRODUCTOS
+  version: 1.0.0
+paths:
+  /api/products:
+    get:
+      tags:
+        - Productos
+      summary: Lista de todos los productos, requiere estar previamente logueado
+      parameters:
+        - name: authtoken
+          in: cookie
+          description: Token de autenticación del usuario generado al iniciar sesión con un usuario válido
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Todos los productos han sido obtenidos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Products"
+
+    post:
+      tags:
+        - Productos
+      summary: Agregar un nuevo producto.
+      description: |
+        Solo pueden acceder a este endpoint los usuarios con rol de admin y premium
+
+      parameters:
+        - name: authtoken
+          in: cookie
+          description: Token de autenticación del usuario generado al iniciar sesión con un usuario válido
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewProductInfo"
+      responses:
+        "200":
+          description: Producto agregado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de confirmación que indica que el producto se agregó exitosamente
+        "default":
+          description: Error inesperado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: Información del error
+                    properties:
+                      message:
+                        type: string
+                        description: Mensaje de error
+
+  /api/products/{pid}:
+    get:
+      tags:
+        - Productos
+      summary: Producto por ID
+      description: |
+        Devuelve la información de un producto según el ID.
+      parameters:
+        - in: path
+          name: pid
+          description: ID del producto a buscar
+          required: true
+          schema:
+            type: string
+        - in: cookie
+          name: authtoken
+          description: Token de autenticación del usuario generado al iniciar sesión con un usuario válido
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product:
+                    type: object
+                    description: Detalles del producto
+                    properties:
+                      _id:
+                        type: string
+                        description: Identificador único del producto
+                      title:
+                        type: string
+                        description: Título del producto
+                      description:
+                        type: string
+                        description: Descripción del producto
+                      price:
+                        type: number
+                        description: Precio del producto
+                      thumbnail:
+                        type: string
+                        description: URL de la imagen en miniatura del producto
+                      code:
+                        type: string
+                        description: Código del producto
+                      stock:
+                        type: integer
+                        description: Cantidad de stock disponible
+                      status:
+                        type: boolean
+                        description: Estado de disponibilidad del producto
+                      category:
+                        type: string
+                        description: Categoría del producto
+                      owner:
+                        type: string
+                        description: Propietario del producto
+                      __v:
+                        type: integer
+                        description: Versión del documento del producto
+        "404":
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: Información del error
+                    properties:
+                      name:
+                        type: string
+                        description: Nombre del error
+                      message:
+                        type: string
+                        description: Mensaje de error
+                      code:
+                        type: number
+                        description: Código de error
+        "default":
+          description: Error inesperado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: Información del error
+                    properties:
+                      message:
+                        type: string
+                        description: Mensaje de error
+    put:
+      tags:
+        - Productos
+      summary: Actualizar un producto por ID
+      description: |
+        Solo pueden acceder a este endpoint los usuarios con rol de admin y premium
+      parameters:
+        - in: path
+          name: pid
+          description: ID del producto a actualizar
+          required: true
+          schema:
+            type: string
+        - in: cookie
+          name: authtoken
+          description: Token de autenticación del usuario generado al iniciar sesión con un usuario válido
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewProductInfo"
+      responses:
+        "200":
+          description: Producto actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de confirmación que indica que el producto se actualizó exitosamente
+                  update:
+                    type: object
+                    description: Detalles de la actualización del producto
+    delete:
+      tags:
+        - Productos
+      summary: Eliminar un producto por ID
+      description: |
+        Solo pueden acceder a este endpoint los usuarios con rol de admin y premium
+        Los usuarios con el rol de admin pueden eliminar cualquier producto, mientras que los usuarios con el rol de premium solo pueden eliminar sus propios productos
+      parameters:
+        - in: path
+          name: pid
+          description: ID del producto a eliminar
+          required: true
+          schema:
+            type: string
+        - in: cookie
+          name: authtoken
+          description: Token de autenticación del usuario generado al iniciar sesión con un usuario válido
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Producto eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de confirmación que indica que el producto se eliminó exitosamente
+        "404":
+          description: Producto no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    description: Información del error
+                    properties:
+                      message:
+                        type: string
+                        description: Mensaje de error
+      x-autentication: admin, premium
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Identificador único del producto en Mongo
+          example: ObjectId(661860cbcb23755fbb3cb898)
+        title:
+          type: string
+          example: Mario Kart 8 Deluxe
+        description:
+          type: string
+          example: Disfruta de la emoción de las carreras en "Mario Kart 8 Deluxe" para Nintendo Switch. Compite con tus personajes favoritos de Mario en pistas vibrantes y emocionantes. Con modos de juego para un solo jugador y multijugador, incluyendo carreras en línea, este juego es perfecto para horas de diversión para toda la familia.
+        price:
+          type: number
+          format: double
+          example: 49.99
+        thumbnail:
+          type: string
+          example: /images/mario-kart-8-deluxe.jpg
+        code:
+          type: string
+          example: MK8DNS0
+        stock:
+          type: number
+          example: 10
+        status:
+          type: boolean
+          default: true
+          example: true
+        category:
+          type: string
+          example: Nintendo
+        owner:
+          type: string
+          description: Creador del producto en la base de datos
+          example: creador.del.producto@gmail.com
+
+    NewProductInfo:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Mario Kart 8 Deluxe
+        description:
+          type: string
+          example: Disfruta de la emoción de las carreras en "Mario Kart 8 Deluxe" para Nintendo Switch. Compite con tus personajes favoritos de Mario en pistas vibrantes y emocionantes. Con modos de juego para un solo jugador y multijugador, incluyendo carreras en línea, este juego es perfecto para horas de diversión para toda la familia.
+        price:
+          type: number
+          format: double
+          example: 39.99
+        thumbnail:
+          type: string
+          example: /images/mario-kart-8-deluxe.jpg
+        code:
+          type: string
+          example: MK8DNS0
+        stock:
+          type: number
+          example: 10
+        status:
+          type: boolean
+          default: true
+          example: true
+        category:
+          type: string
+          example: Nintendo

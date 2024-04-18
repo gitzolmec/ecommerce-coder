@@ -5,8 +5,6 @@ const handlebars = require("express-handlebars");
 const mongoConnect = require("./db");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const path = require("path");
-const MongoStore = require("connect-mongo");
 
 const initializePassport = require("./configs/passport.config");
 const passport = require("passport");
