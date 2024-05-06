@@ -3,7 +3,6 @@ const socket = io("http://localhost:8080");
 socket.on("cartUpdated", (cart, totalProducts, view) => {
   const products = cart.products;
   if (view) {
-    console.log(totalProducts, products);
     document.getElementById("carritoContenedor").textContent = totalProducts;
     return;
   }
@@ -30,8 +29,8 @@ socket.on("ProductDeleted", (productId, totalProducts) => {
   document.getElementById(`product-${productId}`).remove();
   document.getElementById("carritoContenedor").textContent = totalProducts;
 });
-function addProductFromFront(productId, cartId) {
-  return addProduct(productId, cartId);
+function addProductFromFront(productId, cartId, tokenid) {
+  return addProduct(productId, cartId, tokenid);
 }
 function deleteProductFromFront(productId) {
   return deleteProduct(productId);
@@ -40,7 +39,9 @@ function deleteOneProduct(productId, cartId) {
   return deleteProductById(productId, cartId);
 }
 
-async function addProduct(productId, cartId) {
+async function addProduct(productId, cartId, tokenid) {
+  console.log(productId, cartId, tokenid);
+  console.log("entro");
   try {
     const socket = io("http://localhost:8080");
 
@@ -48,14 +49,18 @@ async function addProduct(productId, cartId) {
     const newProductId = productId;
 
     await new Promise((resolve) =>
-      socket.emit("addProd", { cartId, newProductId, quantity }, resolve)
+      socket.emit(
+        "addProd",
+        { cartId, newProductId, quantity, tokenid },
+        resolve
+      )
     );
   } catch (error) {
     console.error(error);
   }
 }
 
-async function addProductToView(productId, cartId) {
+async function addProductToView(productId, cartId, tokenid) {
   try {
     const socket = io("http://localhost:8080");
 
@@ -63,7 +68,11 @@ async function addProductToView(productId, cartId) {
     const newProductId = productId;
     const page = "detailView";
     await new Promise((resolve) =>
-      socket.emit("addProdToView", { cartId, newProductId, quantity }, resolve)
+      socket.emit(
+        "addProdToView",
+        { cartId, newProductId, quantity, tokenid },
+        resolve
+      )
     );
     alert("Producto agregado correctamente");
   } catch (error) {

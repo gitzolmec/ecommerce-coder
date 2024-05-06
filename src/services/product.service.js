@@ -1,15 +1,11 @@
-const ProductDAO = require("../DAO/Mongo/product-dao.mongo");
-const CustomError = require("../handlers/errors/custom.error");
-const {
-  unauthorizedToDeleteProduct,
-} = require("../handlers/errors/generate-error-info");
-const PRODUCT_ERRORS = require("../handlers/errors/product-error-types");
-const { logger } = require("../middlewares/logger.middleware");
-const {
-  generarCodigoProducto,
-} = require("../utils/product-code-generator.util");
-const totalQuantity = require("../utils/total-quantity.util");
-const { getUserById, getOwnerInfo } = require("./users.service");
+import { ProductDAO } from "../DAO/Mongo/product-dao.mongo.js";
+import { CustomError } from "../handlers/errors/custom.error.js";
+import { unauthorizedToDeleteProduct } from "../handlers/errors/generate-error-info.js";
+import { PRODUCT_ERRORS } from "../handlers/errors/product-error-types.js";
+import { logger } from "../middlewares/logger.middleware.js";
+import { generarCodigoProducto } from "../utils/product-code-generator.util.js";
+import { totalQuantity } from "../utils/total-quantity.util.js";
+import { getUserById, getOwnerInfo } from "./users.service.js";
 
 const Products = new ProductDAO();
 
@@ -30,12 +26,8 @@ const getAllProducts = async (req) => {
     const prevPage = paginationInfo.prevPage;
     const nextPage = paginationInfo.nextPage;
     const pLimit = paginationInfo.limit;
-    let pSort = 0;
-    if (sort == 1) {
-      pSort = "asc";
-    } else {
-      pSort = "desc";
-    }
+    let pSort = "asc";
+
     return {
       products,
       totalPages,
@@ -53,10 +45,13 @@ const getAllProducts = async (req) => {
 };
 
 const addProduct = async (productInfo, req) => {
+  logger.debug(productInfo);
+  logger.debug(req);
   if (req.user) {
     const userId = req.user.id;
     const user = await getUserById(userId);
     const role = user.role;
+
     if (role === "admin") {
       productInfo.owner = "admin";
       productInfo.code = generarCodigoProducto(productInfo.title);
@@ -114,6 +109,7 @@ const getClientInfo = async (req) => {
       totalProducts,
       cartId,
       email,
+      tokenid,
     };
   } catch (error) {
     logger.error(error);
@@ -150,7 +146,7 @@ const getProductsByOwner = async (email) => {
 const deleteProductByOwner = async (id) => {
   return await Products.deleteProduct(id);
 };
-module.exports = {
+export {
   getAllProducts,
   getProductById,
   getClientInfo,

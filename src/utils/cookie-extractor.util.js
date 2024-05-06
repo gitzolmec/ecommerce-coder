@@ -6,4 +6,4 @@ const cookieExtractor = (req) => {
   return null;
 };
 
-module.exports = cookieExtractor;
+export { cookieExtractor };

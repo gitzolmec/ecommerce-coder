@@ -11,4 +11,4 @@ const adminValidation = (role) => {
   return adminValidation;
 };
 
-module.exports = adminValidation;
+export { adminValidation };

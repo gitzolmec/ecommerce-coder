@@ -1,13 +1,11 @@
-const { Router } = require("express");
-const Users = require("../models/users.model");
-const passport = require("passport");
+import { Router } from "express";
+import { Users } from "../models/users.model.js";
+import passport from "passport";
+import { useValidPassword, createHash } from "../utils/crypt.password.util.js";
+import { generateToken } from "../utils/jwt.util.js";
+import passportCall from "../utils/passport-call.util.js";
+import ms from "ms";
 const router = Router();
-const {
-  useValidPassword,
-  createHash,
-} = require("../utils/crypt.password.util");
-const { generateToken } = require("../utils/jwt.util");
-const passportCall = require("../utils/passport-call.util.js");
 
 router.post(
   "/login",
@@ -15,14 +13,9 @@ router.post(
   async (req, res) => {
     try {
       const { email, password } = req.body;
-
-      const user = await Users.findOne({ email: email });
+      const user = await Users.findOne({ email });
       const token = generateToken({ id: user._id, role: user.role });
 
-      const redirectURL = "/api/products";
-      const ms = require("ms");
-
-      // Duración de 1 hora
       const horaEnMilisegundos = ms("1h");
       req.logger.info("Sesion iniciada");
       res
@@ -34,10 +27,10 @@ router.post(
         .json({
           message: "Login successful",
           user: token,
-          redirectURL,
+          redirectURL: "/api/products",
         });
     } catch (error) {
-      console.log(error);
+      req.logger.error(error);
       res
         .status(500)
         .json({ status: "error", message: "Internal Server Error" });
@@ -50,19 +43,18 @@ router.get("/fail-login", (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  console.log("logout");
   try {
     req.logger.info("Sesión destruida");
     res.clearCookie("authToken").redirect("/api/login");
   } catch (error) {
-    console.error("Error al destruir la sesión:", error);
+    req.logger.error("Error al destruir la sesión:", error);
     res.json({ error: "Error al destruir la sesión" });
   }
 });
 
 router.get(
   "/github",
-  passport.authenticate("github", { scope: ["user: email"] }, (req, res) => {})
+  passport.authenticate("github", { scope: ["user:email"] })
 );
 
 router.get(
@@ -72,9 +64,8 @@ router.get(
   }),
   async (req, res) => {
     const token = generateToken({ id: req.user._id, role: req.user.role });
-    const ms = require("ms");
+    const ms = await import("ms");
 
-    // Duración de 1 hora
     const horaEnMilisegundos = ms("1h");
     res
       .cookie("authToken", token, {
@@ -85,4 +76,4 @@ router.get(
   }
 );
 
-module.exports = router;
+export default router;

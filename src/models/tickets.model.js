@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const ticketCollection = "ticket";
 
@@ -12,4 +12,4 @@ const ticketSchema = new mongoose.Schema({
 
 const Tickets = mongoose.model(ticketCollection, ticketSchema);
 
-module.exports = Tickets;
+export { Tickets };

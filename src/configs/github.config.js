@@ -1,6 +1,6 @@
-require("dotenv").config();
+import dotenv from "dotenv";
 
-module.exports = {
-  ghClientId: process.env.GH_CLIENT_ID,
-  ghClientSecret: process.env.GH_CLIENT_SECRET,
-};
+dotenv.config();
+
+export const ghClientId = process.env.GH_CLIENT_ID;
+export const ghClientSecret = process.env.GH_CLIENT_SECRET;

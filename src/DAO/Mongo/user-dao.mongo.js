@@ -1,11 +1,11 @@
-const { logger } = require("../../middlewares/logger.middleware");
-const Users = require("../../models/users.model");
-const {
+import { logger } from "../../middlewares/logger.middleware.js";
+import { Users } from "../../models/users.model.js";
+import {
   createHash,
   useValidPassword,
-} = require("../../utils/crypt.password.util");
-const transporter = require("../../utils/nodemailer.util");
-const { generateRecoveryToken } = require("../../utils/recovery-jwt-util");
+} from "../../utils/crypt.password.util.js";
+import { transporter } from "../../utils/nodemailer.util.js";
+import { generateRecoveryToken } from "../../utils/recovery-jwt-util.js";
 
 class UserDao {
   async getUserById(id) {
@@ -15,6 +15,9 @@ class UserDao {
     return await Users.findByIdAndUpdate(id, {
       $push: { purchase_history: purchaseId },
     });
+  }
+  async updateRole(id, role) {
+    return await Users.findByIdAndUpdate(id, { role: role });
   }
   async getOwnerInfo(email) {
     return await Users.findOne({ email: email });
@@ -86,4 +89,4 @@ class UserDao {
   }
 }
 
-module.exports = UserDao;
+export { UserDao };

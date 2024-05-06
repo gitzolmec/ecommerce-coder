@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const { tokenSecret } = require("../configs/token.config");
+import jwt from "jsonwebtoken";
+import { tokenSecret } from "../configs/token.config.js";
 
 const generateRecoveryToken = (userInfo) => {
   return jwt.sign(userInfo, tokenSecret, { expiresIn: "1h" });
@@ -15,7 +15,4 @@ const validateToken = (token) => {
   }
 };
 
-module.exports = {
-  generateRecoveryToken,
-  validateToken,
-};
+export { generateRecoveryToken, validateToken };

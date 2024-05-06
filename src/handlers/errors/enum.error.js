@@ -8,4 +8,4 @@ const EErrors = {
   SERVER_GATEWAY_ERROR: 502,
 };
 
-module.exports = EErrors;
+export { EErrors };

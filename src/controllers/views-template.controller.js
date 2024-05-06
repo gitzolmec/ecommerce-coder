@@ -1,9 +1,6 @@
-const { Router } = require("express");
-const {
-  recoveryPassword,
-  changePassword,
-} = require("../services/users.service");
-const { validateToken } = require("../utils/recovery-jwt-util");
+import { Router } from "express";
+import { recoveryPassword, changePassword } from "../services/users.service.js";
+import { validateToken } from "../utils/recovery-jwt-util.js";
 
 const router = Router();
 
@@ -16,7 +13,7 @@ router.get("/signup", (req, res) => {
 });
 
 router.get("/error-401", (req, res) => {
-  console.log("Error 401");
+  req.logger.error("Error 401");
   res.render("unauthorized-page.handlebars");
 });
 
@@ -74,4 +71,4 @@ router.get("/create/product", (req, res) => {
   res.render("add-product");
 });
 
-module.exports = router;
+export { router };

@@ -1,6 +1,6 @@
-const { Router } = require("express");
-const userAuthMiddleware = require("../middlewares/user-validation.middleware");
-const passportCall = require("../utils/passport-call.util");
+import { Router } from "express";
+import { userAuthMiddleware } from "../middlewares/user-validation.middleware.js";
+import passportCall from "../utils/passport-call.util.js";
 
 const router = Router();
 
@@ -8,4 +8,4 @@ router.get("/", passportCall("jwt"), userAuthMiddleware, async (req, res) => {
   res.render("chat.handlebars");
 });
 
-module.exports = router;
+export { router };

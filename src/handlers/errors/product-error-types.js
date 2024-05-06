@@ -6,4 +6,4 @@ const PRODUCT_ERRORS = {
   ERROR_UPDATING_PRODUCT: "Error updating product",
 };
 
-module.exports = PRODUCT_ERRORS;
+export { PRODUCT_ERRORS };

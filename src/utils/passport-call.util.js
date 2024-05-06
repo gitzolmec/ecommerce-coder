@@ -1,22 +1,27 @@
-const passport = require("passport");
-const { logger } = require("../middlewares/logger.middleware");
+import passport from "passport";
+import { logger } from "../middlewares/logger.middleware.js";
 
 const passportCall = (strategy) => {
   return (req, res, next) => {
     try {
-      passport.authenticate(strategy, function (error, user, info) {
-        if (error) return next(error);
+      passport.authenticate(strategy, (error, user, info) => {
+        if (error) {
+          return next(error);
+        }
 
-        if (!user) return res.status(401).redirect("/api/login");
+        if (!user) {
+          return res.status(401).redirect("/api/login");
+        }
 
         req.user = user;
+
         next();
       })(req, res, next);
     } catch (error) {
-      logger.error("error al realizar autenticacion");
+      logger.error("Error al realizar autenticación");
       res.send({ error: "An error occurred during authentication." });
     }
   };
 };
 
-module.exports = passportCall;
+export default passportCall;

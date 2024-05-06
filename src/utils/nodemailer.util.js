@@ -1,9 +1,9 @@
-const nodemailer = require("nodemailer");
-const {
+import nodemailer from "nodemailer";
+import {
   nodeMailerUser,
   nodeMailerPassword,
   configMailer,
-} = require("../configs/nodemailer.config");
+} from "../configs/nodemailer.config.js";
 
 const transporter = nodemailer.createTransport({
   service: configMailer.EMAIL,
@@ -13,4 +13,4 @@ const transporter = nodemailer.createTransport({
     pass: nodeMailerPassword,
   },
 });
-module.exports = transporter;
+export { transporter };

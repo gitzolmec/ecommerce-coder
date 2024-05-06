@@ -34,4 +34,4 @@ function generarCodigoProducto(titulo) {
   return codigoConNumeros.join("");
 }
 
-module.exports = { generarCodigoProducto };
+export { generarCodigoProducto };

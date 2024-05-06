@@ -1,5 +1,5 @@
-require("dotenv").config();
+import dotenv from "dotenv";
 
-module.exports = {
-  tokenSecret: process.env.TOKEN_SECRET,
-};
+dotenv.config();
+
+export const tokenSecret = process.env.TOKEN_SECRET;

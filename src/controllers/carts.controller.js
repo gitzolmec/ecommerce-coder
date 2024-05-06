@@ -1,10 +1,9 @@
-const { Router } = require("express");
+import { Router } from "express";
 const router = Router();
-const cartDaoMongo = require("../DAO/Mongo/cart-dao.mongo");
 
-const passportCall = require("../utils/passport-call.util.js");
+import passportCall from "../utils/passport-call.util.js";
 
-const {
+import {
   createTicket,
   addProductToCart,
   addCart,
@@ -17,9 +16,8 @@ const {
   deleteProductFromCart,
   deleteCart,
   checkoutCart,
-} = require("../services/carts.service.js");
-const userAuthMiddleware = require("../middlewares/user-validation.middleware.js");
-let cartManager;
+} from "../services/carts.service.js";
+import { userAuthMiddleware } from "../middlewares/user-validation.middleware.js";
 
 const errorHandler = (err, res) => {
   console.error("Error:", err);
@@ -27,24 +25,10 @@ const errorHandler = (err, res) => {
 };
 
 (async () => {
-  //cartManager = await new cartDAOFl("controllers/carts.json");
-  cartManager = await new cartDaoMongo();
-  router.post("/", async (req, res) => {
-    // Crear un nuevo carrito
-    try {
-      const cart = await addCart();
-      const idcart = cart._id;
-      req.logger.debug("Carrito creado:", idcart);
-      res.json({ idcart });
-    } catch (err) {
-      errorHandler(err, res);
-    }
-  });
-
   router.get("/", passportCall("jwt"), async (req, res) => {
     try {
-      const cart = await getCarts();
-      res.json({ cart });
+      const carts = await getCarts();
+      res.json({ carts });
     } catch (err) {
       errorHandler(err, res);
     }
@@ -52,29 +36,31 @@ const errorHandler = (err, res) => {
 
   router.get("/:cid", passportCall("jwt"), async (req, res) => {
     try {
-      const tokenid = req.user.id;
+      const tokenId = req.user.id;
 
-      const { userInfo, adminValidation } = await getCartUserInfo(tokenid);
-      const { first_name, last_name, cartId } = userInfo;
+      const { userInfo, adminValidation } = await getCartUserInfo(tokenId);
+
+      const { first_name, last_name, cartId, role } = userInfo;
 
       const cart = await getCartById(cartId);
-
-      const totalQuantity = await getCartTotalQuantity(cartId);
+      const totalProducts = await getCartTotalQuantity(cartId);
 
       if (cart) {
-        // Mapear los productos y agregar la propiedad quantity
         const products = cart.products.map((p) => ({
           ...p.id,
-          quantity: p.quantity, // Agregar la propiedad quantity
+          quantity: p.quantity,
         }));
+
         req.logger.debug(adminValidation);
         res.render("cart.handlebars", {
           products,
           cartId,
           first_name,
           last_name,
-          totalQuantity,
+          totalProducts,
           adminValidation,
+          role,
+          tokenId,
         });
       } else {
         res.status(404).json({ error: "Carrito no encontrado" });
@@ -85,21 +71,35 @@ const errorHandler = (err, res) => {
     }
   });
 
-  router.post("/:cid/products/:pid", userAuthMiddleware, async (req, res) => {
-    // Agregar un producto al carrito
-    try {
-      const { cartId, productId, quantity } = await addProductToCart(req);
+  router.post(
+    "/:cid/products/:pid",
+    passportCall("jwt"),
+    userAuthMiddleware,
+    async (req, res) => {
+      try {
+        const pid = req.params.pid;
+        const cid = req.params.cid;
+        const addProduct = { cartId: cid, productId: pid };
 
-      res.json({
-        message: `Producto con ID ${productId} agregado al carrito ${cartId}, unidades agregadas: ${quantity}`,
-      });
-    } catch (err) {
-      errorHandler(err, res);
+        const { cartId, productId, quantity } = await addProductToCart(
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          addProduct
+        );
+
+        res.json({
+          message: `Producto con ID ${productId} agregado al carrito ${cartId}, unidades agregadas: ${quantity}`,
+        });
+      } catch (err) {
+        req.logger.error("Error al agregar el producto al carrito", err);
+      }
     }
-  });
+  );
 
   router.put("/:cid", async (req, res) => {
-    // actualizar carrito con una lista de productos y cantidades.
     try {
       const cartId = req.params.cid;
       const productsList = req.body;
@@ -107,7 +107,7 @@ const errorHandler = (err, res) => {
       await updateCartWithProductList(cartId, productsList);
 
       res.json({
-        message: `carrito con ID ${cartId} actualizado con exito: `,
+        message: `Carrito con ID ${cartId} actualizado con éxito.`,
       });
     } catch (err) {
       errorHandler(err, res);
@@ -115,7 +115,6 @@ const errorHandler = (err, res) => {
   });
 
   router.put("/:cid/products/:pid", async (req, res) => {
-    // actualizar la cantidad de un producto en el carrito
     try {
       const cartId = req.params.cid;
       const productId = req.params.pid;
@@ -124,15 +123,14 @@ const errorHandler = (err, res) => {
       await updateProductQuantityInCart(cartId, productId, quantity);
 
       res.json({
-        message: `carrito con ID ${cartId} actualizado con exito: `,
+        message: `Carrito con ID ${cartId} actualizado con éxito.`,
       });
     } catch (err) {
       errorHandler(err, res);
     }
   });
 
-  router.delete("/:cid/products/:pid", userAuthMiddleware, async (req, res) => {
-    // eliminar un producto al carrito
+  router.delete("/:cid/products/:pid", async (req, res) => {
     try {
       const cartId = req.params.cid;
       const productId = req.params.pid;
@@ -140,14 +138,14 @@ const errorHandler = (err, res) => {
       const deletedProduct = await deleteProductFromCart(cartId, productId);
 
       res.json({
-        message: `Producto con ID ${productId} eliminado con exito del carrito ${cartId}`,
+        message: `Producto con ID ${productId} eliminado con éxito del carrito ${cartId}.`,
         deletedProduct,
       });
     } catch (err) {
-      errorHandler(err, res);
+      req.logger.error("Error al eliminar el producto del carrito", err);
     }
   });
-  //eliminar carrito
+
   router.delete("/:cid", async (req, res) => {
     try {
       const cartId = req.params.cid;
@@ -155,18 +153,18 @@ const errorHandler = (err, res) => {
       const deleted = await deleteCart(cartId);
 
       res.json({
-        message: `Carrito con ID ${cartId} vaciado con exito`,
+        message: `Carrito con ID ${cartId} vaciado con éxito.`,
       });
     } catch (err) {
       errorHandler(err, res);
     }
   });
-  //finalizar compra
+
   router.get("/:cid/purchase", passportCall("jwt"), async (req, res) => {
     try {
       const cartId = req.params.cid;
-
       const { totalprice, purchaseDetails, stock } = await checkoutCart(cartId);
+
       if (stock === false) {
         req.logger.warning("No hay stock suficiente");
         setTimeout(() => {
@@ -175,13 +173,14 @@ const errorHandler = (err, res) => {
 
         return;
       }
+
       const ticket = await createTicket(req, totalprice, purchaseDetails);
       res.redirect("/api/products");
     } catch (err) {
-      req.logger.error("error al completar la compra", err);
+      req.logger.error("Error al completar la compra", err);
       errorHandler(err, res);
     }
   });
 })();
 
-module.exports = router;
+export { router };

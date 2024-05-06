@@ -1,10 +1,9 @@
-const { logger } = require("../../middlewares/logger.middleware");
-const Carts = require("../../models/carts.model");
-const Tickets = require("../../models/tickets.model");
-const { getProductById } = require("../../services/product.service");
-const formatDate = require("../../utils/format-date.util");
-const totalQuantity = require("../../utils/total-quantity.util");
-
+import { logger } from "../../middlewares/logger.middleware.js";
+import { Carts } from "../../models/carts.model.js";
+import { Tickets } from "../../models/tickets.model.js";
+import { getProductById } from "../../services/product.service.js";
+import { totalQuantity } from "../../utils/total-quantity.util.js";
+import { io } from "../../../app.js";
 class cartDao {
   async getCarts() {
     const cart = await Carts.find({}, { __v: 0 }).populate("products.id");
@@ -35,7 +34,7 @@ class cartDao {
   async addProductToCart(cartId, productId, quantity, view) {
     try {
       // Buscar el carrito por ID
-
+      console.log("carrito: ", cartId);
       const cart = await Carts.findOne({ _id: cartId });
 
       if (!cart) {
@@ -57,10 +56,6 @@ class cartDao {
       // Guardar el carrito actualizado en la base de datos
       await cart.save();
       logger.info("Producto agregado al carrito");
-      const totalProducts = await totalQuantity(cartId);
-      const { io } = require("../../../app");
-
-      io.emit("cartUpdated", cart, totalProducts, view);
     } catch (error) {
       logger.error("Error al agregar el producto al carrito: ", error);
       throw new Error("Error al agregar el producto al carrito");
@@ -125,8 +120,6 @@ class cartDao {
         await cart.save();
         const totalProducts = await totalQuantity(cartId);
 
-        const { io } = require("../../../app");
-
         io.emit("oneProductDeleted", cart, totalProducts);
       } else {
         throw new Error("Producto no encontrado en el carrito");
@@ -160,7 +153,6 @@ class cartDao {
       await cart.save();
       logger.info("Producto eliminado del carrito");
       const totalProducts = await totalQuantity(cartId);
-      const { io } = require("../../../app");
 
       io.emit("ProductDeleted", productId, totalProducts);
 
@@ -311,4 +303,4 @@ class cartDao {
   }
 }
 
-module.exports = cartDao;
+export { cartDao };

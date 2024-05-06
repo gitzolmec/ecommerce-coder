@@ -66,12 +66,16 @@ const updateProductErrorInfo = (
     * category   : needs to be a string, received ${category},
     `;
 };
+const addingOwnProduct = () => {
+  return "You can't add your own products to the cart";
+};
 
-module.exports = {
+export {
   generateUserErrorInfo,
   deleteProductErrorInfo,
   productIdNotFound,
   createProductErrorInfo,
   updateProductErrorInfo,
   unauthorizedToDeleteProduct,
+  addingOwnProduct,
 };

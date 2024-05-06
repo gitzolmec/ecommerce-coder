@@ -6,6 +6,7 @@
     <div class="welcome-message text-white">
       Bienvenido/a, {{first_name}} {{last_name}}<br />
       Role: {{role}}
+      
     </div>
     <div class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid container">
@@ -160,7 +161,7 @@
       </p>
   
       <button  class="btn btn-primary mr-2" id="{{_id}}" {{#isEqualOr
-        adminValidation "premium" "user"}} style="display: inline-block; margin-right: 10px;" onclick="addProductToView('{{_id}}', '{{cartId}}')" {{else}} style="display: none" {{/isEqualOr}}>
+        adminValidation "premium" "user"}} style="display: inline-block; margin-right: 10px;" onclick="addProductToView('{{_id}}', '{{cartId}}','{{tokenid}}')" {{else}} style="display: none" {{/isEqualOr}}>
         Add to cart
       </button>
    

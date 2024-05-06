@@ -1,7 +1,7 @@
-const UserDao = require("../DAO/Mongo/user-dao.mongo");
-const { logger } = require("../middlewares/logger.middleware");
-const formatDate = require("../utils/format-date.util");
-const totalQuantity = require("../utils/total-quantity.util");
+import { UserDao } from "../DAO/Mongo/user-dao.mongo.js";
+import { logger } from "../middlewares/logger.middleware.js";
+import { formatDate } from "../utils/format-date.util.js";
+import { totalQuantity } from "../utils/total-quantity.util.js";
 
 const Users = new UserDao();
 
@@ -14,6 +14,11 @@ const getOwnerInfo = async (email) => {
 
 const updateUser = async (id, data) => {
   return await Users.updateUser(id, data);
+};
+const updateUserRole = async (id) => {
+  const user = await Users.getUserById(id);
+  const role = user.role === "user" ? "premium" : "user";
+  return await Users.updateRole(id, role);
 };
 
 const getPurchases = async (req) => {
@@ -53,7 +58,7 @@ const changePassword = async (newPassword, email) => {
   return await Users.changePassword(newPassword, email);
 };
 
-module.exports = {
+export {
   getUserById,
   updateUser,
   getPurchases,
@@ -62,4 +67,5 @@ module.exports = {
   recoveryPassword,
   changePassword,
   getOwnerInfo,
+  updateUserRole,
 };

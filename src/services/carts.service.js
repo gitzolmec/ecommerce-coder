@@ -1,8 +1,16 @@
-const cartDao = require("../DAO/Mongo/cart-dao.mongo");
-const { v4: uuidv4 } = require("uuid");
-const { getUserById, updateUser } = require("./users.service");
-const transporter = require("../utils/nodemailer.util");
-const { logger } = require("../middlewares/logger.middleware");
+import { cartDao } from "../DAO/Mongo/cart-dao.mongo.js";
+import { v4 as uuidv4 } from "uuid";
+import { getUserById, updateUser } from "./users.service.js";
+import { transporter } from "../utils/nodemailer.util.js";
+import { logger } from "../middlewares/logger.middleware.js";
+import { getProductById } from "./product.service.js";
+import { totalQuantity } from "../utils/total-quantity.util.js";
+import { CART_ERRORS } from "../handlers/errors/cart-error-types.js";
+import { addingOwnProduct } from "../handlers/errors/generate-error-info.js";
+import { CustomError } from "../handlers/errors/custom.error.js";
+import { EErrors } from "../handlers/errors/enum.error.js";
+import { io } from "../../app.js";
+
 const cart = new cartDao();
 
 const getCartById = async (id) => {
@@ -41,8 +49,8 @@ const getCartTotalQuantity = async (cartId) => {
 };
 
 const deleteProductFromCart = async (cartId, productId) => {
-  const cart = await cart.deleteProductFromCart(cartId, productId);
-  return cart;
+  const userCart = await cart.deleteProductFromCart(cartId, productId);
+  return userCart;
 };
 
 const deleteCart = async (cartId) => {
@@ -89,12 +97,49 @@ const updateProductQuantityInCart = async (cartId, productId, quantity) => {
   return cart;
 };
 
-const addProductToCart = async (req) => {
-  const cartId = req.params.cid;
-  const productId = req.params.pid;
-  const quantity = req.body.quantity || 1;
-  const cart = await cart.addProductToCart(cartId, productId, quantity, req);
-  return cart;
+const addProductToCart = async (
+  cartId,
+  productId,
+  quantity,
+  tokenid,
+  view,
+  addProduct
+) => {
+  try {
+    console.log("aca", addProduct);
+    if (!addProduct) {
+      const product = await getProductById(productId);
+      const productOwner = product.owner;
+      const loggedUser = await getUserById(tokenid);
+      const emailUser = loggedUser.email;
+      if (productOwner === emailUser) {
+        return CustomError.createError({
+          name: CART_ERRORS.ERROR_ADDING_PRODUCT,
+          cause: addingOwnProduct(),
+          message:
+            "no se puede agregar productos donde el usuario sea el owner a su carrito",
+          code: EErrors.BAD_REQUEST,
+        });
+      }
+      const Cart = await cart.addProductToCart(cartId, productId, quantity);
+      const totalProducts = await totalQuantity(cartId);
+
+      io.emit("cartUpdated", cart, totalProducts, view);
+      return Cart;
+    } else {
+      const cartId = addProduct.cartId;
+      const productId = addProduct.productId;
+      const quantity = 1;
+      const Cart = await cart.addProductToCart(cartId, productId, quantity);
+      return cartId, productId, quantity;
+    }
+  } catch (error) {
+    console.error("Error en addProductToCart:", error);
+
+    if (error instanceof CustomError) {
+      throw error;
+    }
+  }
 };
 
 const sendEmail = async (
@@ -131,7 +176,7 @@ const sendEmail = async (
 </style><table class="tableEmail" ><tr><th>Cantidad</th><th>Producto</th><th>Precio</th></tr>${content}<tr><td>TOTAL:</td><td colspan="2" class="total"> ${amount}</td></tr></table>`;
   const MailInfo = await transporter.sendMail({
     from: '"8-bits 🎮" <jorgemorales.600@gmail.com>',
-    to: "jorgemorales_1991@hotmail.com",
+    to: email,
     subject: "Compra Exitosa ✔",
     text: `Hola ${first_name} ${last_name}`,
     html: message,
@@ -140,7 +185,7 @@ const sendEmail = async (
   logger.info(`Message sent: %s, ${MailInfo.messageId}`);
 };
 
-module.exports = {
+export {
   createTicket,
   checkoutCart,
   getCartById,

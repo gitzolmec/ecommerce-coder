@@ -1,5 +1,5 @@
-const { logger } = require("../middlewares/logger.middleware");
-const Carts = require("../models/carts.model");
+import { logger } from "../middlewares/logger.middleware.js";
+import { Carts } from "../models/carts.model.js";
 async function totalQuantity(cartId) {
   try {
     const cart = await Carts.findOne({ _id: cartId });
@@ -20,4 +20,4 @@ async function totalQuantity(cartId) {
   }
   return 0; //
 }
-module.exports = totalQuantity;
+export { totalQuantity };

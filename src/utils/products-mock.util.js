@@ -1,5 +1,5 @@
-const { faker } = require("@faker-js/faker");
-const products = require("../test/products-test");
+import { faker } from "@faker-js/faker";
+import { products } from "../test/products-test.js";
 
 const generateProducts = () => {
   const products = [];
@@ -26,4 +26,4 @@ const generateProduct = () => {
   };
 };
 
-module.exports = generateProducts;
+export { generateProducts };

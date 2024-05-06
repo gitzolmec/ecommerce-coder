@@ -1,16 +1,17 @@
-const express = require("express");
-const router = require("./router/index");
+import express from "express";
+import { router } from "./router/index.js";
+
+import { ExpressHandlebars } from "express-handlebars";
+import { mongoConnect } from "./db/index.js";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+
+import { initializePassport } from "./configs/passport.config.js";
+import passport from "passport";
+import { winstonLogger } from "./middlewares/logger.middleware.js";
+import { registerHandlebarsHelpers } from "./helpers/handlebars.helpers.js";
+const handlebars = new ExpressHandlebars();
 const app = express();
-const handlebars = require("express-handlebars");
-const mongoConnect = require("./db");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
-
-const initializePassport = require("./configs/passport.config");
-const passport = require("passport");
-const { winstonLogger } = require("./middlewares/logger.middleware");
-const { registerHandlebarsHelpers } = require("./helpers/handlebars.helpers");
-
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -28,7 +29,7 @@ app.use(winstonLogger);
 initializePassport();
 app.use(passport.initialize());
 registerHandlebarsHelpers();
-app.engine("handlebars", handlebars.engine());
+app.engine("handlebars", handlebars.engine);
 
 app.set("views", process.cwd() + "/src/views");
 app.set("view engine", "handlebars");
@@ -36,4 +37,4 @@ app.set("view engine", "handlebars");
 router(app);
 mongoConnect();
 
-module.exports = app;
+export { app };

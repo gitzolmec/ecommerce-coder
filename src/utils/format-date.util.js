@@ -1,4 +1,4 @@
-const moment = require("moment");
+import moment from "moment";
 
 const formatDate = (date) => {
   const currentDate = moment(date);
@@ -9,4 +9,4 @@ const formatDate = (date) => {
   return formattedDate;
 };
 
-module.exports = formatDate;
+export { formatDate };

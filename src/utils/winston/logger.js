@@ -1,6 +1,6 @@
-const winston = require("winston");
-const { format } = require("winston");
-const customWinston = require("./custom.winston");
+import winston from "winston";
+import { format } from "winston";
+import { customWinston } from "./custom.winston.js";
 
 winston.addColors(customWinston.colors);
 const loggerFormat = format.combine(
@@ -18,4 +18,4 @@ const winstonLogger = winston.createLogger({
   ],
 });
 
-module.exports = winstonLogger;
+export { winstonLogger };

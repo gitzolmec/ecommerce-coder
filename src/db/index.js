@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const { dbUser, dbPassword, dbHost, dbName } = require("../configs/db.config");
-const { logger } = require("../middlewares/logger.middleware");
+import mongoose from "mongoose";
+import { dbUser, dbPassword, dbHost, dbName } from "../configs/db.config.js";
+import { logger } from "../middlewares/logger.middleware.js";
 
 const mongoConnect = async () => {
   try {
@@ -13,4 +13,4 @@ const mongoConnect = async () => {
   }
 };
 
-module.exports = mongoConnect;
+export { mongoConnect };

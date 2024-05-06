@@ -3,4 +3,4 @@ const CART_ERRORS = {
   CART_ID_NOT_FOUND: "Cart ID not found",
 };
 
-module.exports = CART_ERRORS;
+export { CART_ERRORS };

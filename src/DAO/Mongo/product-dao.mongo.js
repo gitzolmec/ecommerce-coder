@@ -1,8 +1,7 @@
-const { logger } = require("../../middlewares/logger.middleware");
-const Products = require("../../models/products.model");
-const mongoosePaginate = require("mongoose-paginate-v2");
-const { getUserById } = require("../../services/users.service");
-
+import { logger } from "../../middlewares/logger.middleware.js";
+import { Products } from "../../models/products.model.js";
+import mongoosePaginate from "mongoose-paginate-v2";
+import { io } from "../../../app.js";
 class ProductDAO {
   async getProducts(limit, qpage, sort, category) {
     try {
@@ -108,9 +107,8 @@ class ProductDAO {
 
     logger.debug(productId);
 
-    const { io } = require("../../../app");
     io.emit("updateProductByOwner", productId);
     return productList;
   }
 }
-module.exports = ProductDAO;
+export { ProductDAO };

@@ -1,5 +1,5 @@
-require("dotenv").config();
+import dotenv from "dotenv";
 
-module.exports = {
-  winstonUser: process.env.USER,
-};
+dotenv.config();
+
+export const winstonUser = process.env.USER;

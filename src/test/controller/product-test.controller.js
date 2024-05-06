@@ -1,23 +1,21 @@
-const { Router } = require("express");
+import { Router } from "express";
 
 const router = Router();
-const {
+import {
   getAllProducts,
   getProductById,
   getClientInfo,
   updateProduct,
   deleteProduct,
   addProduct,
-} = require("../../services/product.service");
+} from "../../services/product.service.js";
 
-const generateProducts = require("../../utils/products-mock.util");
-const CustomError = require("../../handlers/errors/custom.error");
-const PRODUCT_ERRORS = require("../../handlers/errors/product-error-types");
-const {
-  productIdNotFound,
-} = require("../../handlers/errors/generate-error-info");
-const EErrors = require("../../handlers/errors/enum.error");
-const { addProductToCart } = require("../../services/carts.service");
+import { generateProducts } from "../../utils/products-mock.util.js";
+import { CustomError } from "../../handlers/errors/custom.error.js";
+import { PRODUCT_ERRORS } from "../../handlers/errors/product-error-types.js";
+import { productIdNotFound } from "../../handlers/errors/generate-error-info.js";
+import { EErrors } from "../../handlers/errors/enum.error.js";
+import { addProductToCart } from "../../services/carts.service.js";
 
 router.get("/mockingproducts", async (req, res) => {
   try {
@@ -97,4 +95,4 @@ router.post("/addproduct", async (req, res) => {
   }
 });
 
-module.exports = router;
+export { router };

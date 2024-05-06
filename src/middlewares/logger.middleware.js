@@ -1,5 +1,5 @@
-const { validarAmbiente } = require("../utils/winston/factory.winston");
-const { winstonUser } = require("../configs/winston.config");
+import { validarAmbiente } from "../utils/winston/factory.winston.js";
+import { winstonUser } from "../configs/winston.config.js";
 
 const winstonLogger = (req, res, next) => {
   const logger = validarAmbiente(winstonUser);
@@ -11,4 +11,4 @@ const winstonLogger = (req, res, next) => {
 
 const logger = validarAmbiente(winstonUser);
 
-module.exports = { winstonLogger, logger };
+export { winstonLogger, logger };

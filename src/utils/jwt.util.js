@@ -1,29 +1,24 @@
-const jwt = require("jsonwebtoken");
-const { tokenSecret } = require("../configs/token.config");
+import jwt from "jsonwebtoken";
+import { tokenSecret } from "../configs/token.config.js";
 
-const generateToken = (user) => {
+export const generateToken = (user) => {
   return jwt.sign(user, tokenSecret, { expiresIn: "20m" });
 };
 
-const authToken = (req, res, next) => {
+export const authToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader)
+  if (!authHeader) {
     return res.status(401).json({ status: "error", error: "Unauthorized" });
+  }
 
   const token = authHeader.split(" ")[1];
 
   jwt.verify(token, tokenSecret, (error, credentials) => {
-    console.log(error);
-    if (error)
+    if (error) {
       return res.status(401).json({ status: "error", error: "Unauthorized" });
+    }
 
     req.user = credentials.user;
-
     next();
   });
-};
-
-module.exports = {
-  generateToken,
-  authToken,
 };

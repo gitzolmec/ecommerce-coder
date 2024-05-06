@@ -17,4 +17,4 @@ const customWinston = {
   },
 };
 
-module.exports = customWinston;
+export { customWinston };

@@ -1,4 +1,4 @@
-const Handlebars = require("handlebars");
+import Handlebars from "handlebars";
 
 // Helper 'and' para Handlebars
 Handlebars.registerHelper("and", function () {
@@ -48,6 +48,4 @@ Handlebars.registerHelper("isEqualOr", function () {
   return options.inverse(this);
 });
 
-module.exports = {
-  registerHandlebarsHelpers: function () {},
-};
+export const registerHandlebarsHelpers = function () {};

@@ -1,15 +1,16 @@
-const { port } = require("./src/configs/server.config");
-const { Server } = require("socket.io");
-const app = require("./src/server");
-const chatDAOMongo = require("./src/DAO/Mongo/chat-dao.mongo");
-const cartDaoMongo = require("./src/DAO/Mongo/cart-dao.mongo");
+import { port } from "./src/configs/server.config.js";
+import { Server } from "socket.io";
+import { app } from "./src/server.js";
+import { chatDAO } from "./src/DAO/Mongo/chat-dao.mongo.js";
+import { cartDao } from "./src/DAO/Mongo/cart-dao.mongo.js";
 
-const { logger } = require("./src/middlewares/logger.middleware");
-const { deleteProductByOwner } = require("./src/services/product.service");
+import { logger } from "./src/middlewares/logger.middleware.js";
+import { deleteProductByOwner } from "./src/services/product.service.js";
+import { addProductToCart } from "./src/services/carts.service.js";
 
 const chats = [];
-const chat = new chatDAOMongo();
-const cart = new cartDaoMongo();
+const chat = new chatDAO();
+const cart = new cartDao();
 
 const httpServer = app.listen(port, () => {
   logger.info(`Servidor escuchando en el puerto ${port}`);
@@ -31,20 +32,17 @@ io.on("connection", (socket) => {
     io.emit("messageLogs", message);
   });
 
-  socket.on("addProd", async ({ cartId, newProductId, quantity }) => {
-    cartId = cartId.trim();
-    await cart.addProductToCart(cartId, newProductId, quantity);
-  });
-  socket.on("addProdToView", async ({ cartId, newProductId, quantity }) => {
+  socket.on("addProd", async ({ cartId, newProductId, quantity, tokenid }) => {
     cartId = cartId.trim();
     const view = "details";
-    await cart.addProductToCart(cartId, newProductId, quantity, view);
+    await addProductToCart(cartId, newProductId, quantity, tokenid, view);
   });
-
   socket.on(
-    "addProductFromView",
-    async ({ cartId, newProductId, quantity }) => {
-      await cart.addProductToCart(cartId, newProductId, quantity);
+    "addProdToView",
+    async ({ cartId, newProductId, quantity, tokenid }) => {
+      cartId = cartId.trim();
+      const view = "details";
+      await addProductToCart(cartId, newProductId, quantity, tokenid, view);
     }
   );
 
@@ -62,6 +60,4 @@ io.on("connection", (socket) => {
   });
 });
 
-module.exports = {
-  io,
-};
+export { io };

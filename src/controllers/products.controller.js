@@ -1,25 +1,25 @@
-const { Router } = require("express");
+import { Router } from "express";
 const router = Router();
 
-const passportCall = require("../utils/passport-call.util.js");
-
-const {
+import passportCall from "../utils/passport-call.util.js";
+import { io } from "../../app.js";
+import {
   getAllProducts,
   getClientInfo,
   getProductById,
   deleteProduct,
   addProduct,
   getProductsByOwner,
-} = require("../services/product.service.js");
-const adminAuthMiddleware = require("../middlewares/admin-validation.middleware.js");
-const {
+} from "../services/product.service.js";
+import { adminAuthMiddleware } from "../middlewares/admin-validation.middleware.js";
+import {
   deleteProductErrorInfo,
   productIdNotFound,
   createProductErrorInfo,
-} = require("../handlers/errors/generate-error-info.js");
-const PRODUCT_ERRORS = require("../handlers/errors/product-error-types.js");
-const EErrors = require("../handlers/errors/enum.error.js");
-const { logger } = require("handlebars");
+} from "../handlers/errors/generate-error-info.js";
+import { PRODUCT_ERRORS } from "../handlers/errors/product-error-types.js";
+import { EErrors } from "../handlers/errors/enum.error.js";
+import logger from "handlebars";
 
 // Inicialización del ProductManager y definición de rutas
 
@@ -151,11 +151,12 @@ router.post("/", passportCall("jwt"), adminAuthMiddleware, async (req, res) => {
       owner,
     };
 
-    const newProduct = await addProduct(newProductInfo);
+    const newProduct = await addProduct(newProductInfo, req);
+
     req.logger.info("Producto agregado con éxito" + newProduct.title);
-    res.json({ message: "Producto agregado con éxito" });
+    res.json({ message: `Producto agregado con éxito:  ${newProduct}` });
   } catch (err) {
-    res.json({ err });
+    req.logger.error(err);
   }
 });
 
@@ -302,7 +303,7 @@ router.delete(
       const deleted = await deleteProduct(pid);
 
       const newProductList = await getAllProducts();
-      const { io } = require("../app.js");
+
       // Emitir el evento 'updateProductList' para actualizar la lista de productos
       io.emit("updateProducts", newProductList);
       res.render("realTimeProducts.handlebars");
@@ -327,6 +328,7 @@ router.get("/details/:pid", passportCall("jwt"), async (req, res) => {
       cartId,
       totalProducts,
       adminValidation,
+      tokenid,
     } = await getClientInfo(req);
 
     const product = await getProductById(productId);
@@ -357,6 +359,7 @@ router.get("/details/:pid", passportCall("jwt"), async (req, res) => {
       cartId,
       totalProducts,
       adminValidation,
+      tokenid,
     });
   } catch (error) {
     res.json({ error });
@@ -373,7 +376,7 @@ router.get(
       if (!tokenid) {
         res.redirect("/login");
       }
-      req.logger.debug(tokenid);
+
       const {
         first_name,
         last_name,
@@ -392,7 +395,7 @@ router.get(
         cartId,
       });
     } catch (err) {
-      console.log(err);
+      req.logger.error(err);
     }
   }
 );
@@ -447,4 +450,4 @@ router.get(
   }
 );
 
-module.exports = router;
+export { router };

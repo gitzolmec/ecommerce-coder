@@ -11,4 +11,4 @@ function calculateAge(dob) {
   }
   return age;
 }
-module.exports = calculateAge;
+export { calculateAge };

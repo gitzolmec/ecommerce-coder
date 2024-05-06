@@ -189,4 +189,4 @@ const descriptions = [
   "Embárcate en un viaje emocionante a través de un mundo lleno de personajes inolvidables y decisiones morales difíciles.",
 ];
 
-module.exports = products;
+export { products };

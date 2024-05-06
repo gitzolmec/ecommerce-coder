@@ -1,25 +1,22 @@
-const passport = require("passport");
-const local = require("passport-local");
-const GithubStrategy = require("passport-github2");
-const jwt = require("passport-jwt");
-const { tokenSecret } = require("./token.config");
-const { ghClientSecret, ghClientId } = require("./github.config");
-const Users = require("../models/users.model");
-const CartDao = require("../DAO/Mongo/cart-dao.mongo");
-const carts = new CartDao();
-const {
-  createHash,
-  useValidPassword,
-} = require("../utils/crypt.password.util");
+import passport from "passport";
+import local from "passport-local";
+import GithubStrategy from "passport-github2";
+import jwt from "passport-jwt";
+import { tokenSecret } from "./token.config.js";
+import { ghClientSecret, ghClientId } from "./github.config.js";
+import { Users } from "../models/users.model.js";
+import { cartDao } from "../DAO/Mongo/cart-dao.mongo.js";
 
-const cookieExtractor = require("../utils/cookie-extractor.util");
-const calculateAge = require("../middlewares/calculateAge.middleware");
-const generateUserErrorInfo = require("../handlers/errors/generate-error-info");
-const EErrors = require("../handlers/errors/enum.error");
-const CustomError = require("../handlers/errors/custom.error");
-const TYPES_ERRORS = require("../handlers/errors/user-error-types");
-const { logger } = require("../middlewares/logger.middleware");
+import { createHash, useValidPassword } from "../utils/crypt.password.util.js";
 
+import { cookieExtractor } from "../utils/cookie-extractor.util.js";
+import { calculateAge } from "../middlewares/calculateAge.middleware.js";
+import { generateUserErrorInfo } from "../handlers/errors/generate-error-info.js";
+import { EErrors } from "../handlers/errors/enum.error.js";
+import { CustomError } from "../handlers/errors/custom.error.js";
+import { TYPES_ERRORS } from "../handlers/errors/user-error-types.js";
+import { logger } from "../middlewares/logger.middleware.js";
+const carts = new cartDao();
 const LocalStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
 
@@ -31,7 +28,7 @@ const initializePassport = () => {
       async (req, username, password, done) => {
         try {
           const { first_name, last_name, email, age } = req.body;
-
+          console.log(age);
           if (!first_name || !last_name || !email || !age) {
             CustomError.createError({
               name: TYPES_ERRORS.USER_CREATION_ERROR,
@@ -162,4 +159,4 @@ const initializePassport = () => {
   });
 };
 
-module.exports = initializePassport;
+export { initializePassport };

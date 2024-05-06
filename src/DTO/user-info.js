@@ -9,4 +9,4 @@ class UserResponseDto {
   }
 }
 
-module.exports = UserResponseDto;
+export { UserResponseDto };

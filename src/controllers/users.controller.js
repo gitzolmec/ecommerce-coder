@@ -1,17 +1,18 @@
-const { Router } = require("express");
-const Users = require("../models/users.model");
-const adminAuthMiddleware = require("../middlewares/admin-validation.middleware");
+import { Router } from "express";
+
+import { adminAuthMiddleware } from "../middlewares/admin-validation.middleware.js";
 const router = Router();
-const passport = require("passport");
-const passportCall = require("../utils/passport-call.util");
-const {
+import passport from "passport";
+import passportCall from "../utils/passport-call.util.js";
+import {
   getUserById,
   getPurchases,
   getUserListForAdmins,
-} = require("../services/users.service");
-const totalQuantity = require("../utils/total-quantity.util");
-const UserResponseDto = require("../DTO/user-info");
-const adminValidation = require("../utils/admin-validation.util");
+  updateUserRole,
+} from "../services/users.service.js";
+import { totalQuantity } from "../utils/total-quantity.util.js";
+import { UserResponseDto } from "../DTO/user-info.js";
+import { adminValidation } from "../utils/admin-validation.util.js";
 
 router.post(
   "/",
@@ -55,7 +56,7 @@ router.get(
 );
 
 router.get("/fail-register", (req, res) => {
-  console.log("Falló registro");
+  req.logger.error("Error al registrar usuario");
   res.status(400).json({ status: "error", error: "Bad request" });
 });
 
@@ -73,7 +74,7 @@ router.get("/current", passportCall("jwt"), async (req, res) => {
       totalProducts,
     });
   } catch (error) {
-    console.log(error);
+    req.logger.error(error);
     res.status(400).json({ status: "error", message: "Not Found" });
   }
 });
@@ -98,8 +99,19 @@ router.get("/purchaseHistory", passportCall("jwt"), async (req, res) => {
       totalProducts,
     });
   } catch (error) {
-    console.log(error);
+    req.logger.error(error);
     res.status(400).json({ status: "error", message: "Not Found" });
   }
 });
-module.exports = router;
+
+router.get("/premium/:uid", async (req, res) => {
+  try {
+    const tokenid = req.params.uid;
+    const updateRole = updateUserRole(tokenid);
+    res.redirect("/api/users/current");
+  } catch (error) {
+    req.logger.error(error);
+    res.status(400).json({ status: "error", message: "Not Found" });
+  }
+});
+export { router };
