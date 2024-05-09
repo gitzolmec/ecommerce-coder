@@ -68,6 +68,7 @@ router.get("/", passportCall("jwt"), async (req, res) => {
       adminValidation,
       cartId,
       totalProducts,
+      tokenid,
     });
   } catch (err) {
     logger.error(err);
@@ -393,6 +394,7 @@ router.get(
         adminValidation,
         totalProducts,
         cartId,
+        tokenid,
       });
     } catch (err) {
       req.logger.error(err);
@@ -443,6 +445,7 @@ router.get(
         totalProducts,
         cartId,
         products,
+        tokenid,
       });
     } catch (err) {
       console.log(err);

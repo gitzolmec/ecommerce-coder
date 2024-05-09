@@ -4,6 +4,7 @@ import {
   createHash,
   useValidPassword,
 } from "../../utils/crypt.password.util.js";
+import { formatDate } from "../../utils/format-date.util.js";
 import { transporter } from "../../utils/nodemailer.util.js";
 import { generateRecoveryToken } from "../../utils/recovery-jwt-util.js";
 
@@ -16,9 +17,17 @@ class UserDao {
       $push: { purchase_history: purchaseId },
     });
   }
+  async updateUserDocuments(id, newDocument) {
+    return await Users.findByIdAndUpdate(
+      id,
+      { $push: { documents: newDocument } },
+      { new: true }
+    );
+  }
   async updateRole(id, role) {
     return await Users.findByIdAndUpdate(id, { role: role });
   }
+
   async getOwnerInfo(email) {
     return await Users.findOne({ email: email });
   }
@@ -86,6 +95,12 @@ class UserDao {
       return user;
     }
     logger.warning("La contraseña ya existe");
+  }
+
+  async logout(id) {
+    return await Users.findByIdAndUpdate(id, {
+      last_connection: formatDate(Date.now()),
+    });
   }
 }
 

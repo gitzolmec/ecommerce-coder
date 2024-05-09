@@ -13,6 +13,8 @@ import {
 import { totalQuantity } from "../utils/total-quantity.util.js";
 import { UserResponseDto } from "../DTO/user-info.js";
 import { adminValidation } from "../utils/admin-validation.util.js";
+import upload from "../middlewares/multer.middleware.js";
+import uploadFiles from "../middlewares/upload.middleware.js";
 
 router.post(
   "/",
@@ -72,6 +74,7 @@ router.get("/current", passportCall("jwt"), async (req, res) => {
       userInfoDto,
       userValidation,
       totalProducts,
+      tokenid,
     });
   } catch (error) {
     req.logger.error(error);
@@ -97,6 +100,7 @@ router.get("/purchaseHistory", passportCall("jwt"), async (req, res) => {
       cartId,
       userValidation,
       totalProducts,
+      tokenid,
     });
   } catch (error) {
     req.logger.error(error);
@@ -104,7 +108,7 @@ router.get("/purchaseHistory", passportCall("jwt"), async (req, res) => {
   }
 });
 
-router.get("/premium/:uid", async (req, res) => {
+router.get("/premium/:uid", passportCall("jwt"), async (req, res) => {
   try {
     const tokenid = req.params.uid;
     const updateRole = updateUserRole(tokenid);
@@ -114,4 +118,26 @@ router.get("/premium/:uid", async (req, res) => {
     res.status(400).json({ status: "error", message: "Not Found" });
   }
 });
+
+router.get("/:uid/documents", passportCall("jwt"), async (req, res) => {
+  const tokenid = req.user.id;
+  const userInfo = await getUserById(tokenid);
+  const userInfoDto = new UserResponseDto(userInfo);
+  const totalProducts = await totalQuantity(userInfoDto.cartId);
+  const userValidation = adminValidation(userInfoDto.role);
+  res.render("upload-files.handlebars", {
+    userInfoDto,
+    totalProducts,
+    userValidation,
+    tokenid,
+  });
+});
+
+router.post(
+  "/:uid/documents",
+  passportCall("jwt"),
+  upload.single("myFile"),
+  uploadFiles
+);
+
 export { router };

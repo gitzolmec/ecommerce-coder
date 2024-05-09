@@ -40,8 +40,6 @@ function deleteOneProduct(productId, cartId) {
 }
 
 async function addProduct(productId, cartId, tokenid) {
-  console.log(productId, cartId, tokenid);
-  console.log("entro");
   try {
     const socket = io("http://localhost:8080");
 

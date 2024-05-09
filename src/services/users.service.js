@@ -15,10 +15,34 @@ const getOwnerInfo = async (email) => {
 const updateUser = async (id, data) => {
   return await Users.updateUser(id, data);
 };
+
 const updateUserRole = async (id) => {
-  const user = await Users.getUserById(id);
-  const role = user.role === "user" ? "premium" : "user";
-  return await Users.updateRole(id, role);
+  try {
+    const user = await Users.getUserById(id);
+    const documents = user.personal_documents;
+    console.log(documents);
+    // Verificar si existen los tres documentos requeridos
+    const hasDni = documents.some((doc) => doc.name === "dni");
+    logger.debug(hasDni);
+    const hasAddressDoc = documents.some(
+      (doc) => doc.name === "addressDocument"
+    );
+    logger.debug(hasAddressDoc);
+    const hasAccountDoc = documents.some(
+      (doc) => doc.name === "accountDocument"
+    );
+    logger.debug(hasAccountDoc);
+
+    if (hasDni && hasAddressDoc && hasAccountDoc) {
+      const role = user.role === "user" ? "premium" : "user";
+      await Users.updateRole(id, role);
+      console.log("Rol actualizado correctamente");
+    } else {
+      console.log("Faltan documentos requeridos");
+    }
+  } catch (error) {
+    console.error("Error al actualizar el rol:", error);
+  }
 };
 
 const getPurchases = async (req) => {
@@ -58,6 +82,10 @@ const changePassword = async (newPassword, email) => {
   return await Users.changePassword(newPassword, email);
 };
 
+const logout = async (id) => {
+  return await Users.logout(id);
+};
+
 export {
   getUserById,
   updateUser,
@@ -68,4 +96,5 @@ export {
   changePassword,
   getOwnerInfo,
   updateUserRole,
+  logout,
 };

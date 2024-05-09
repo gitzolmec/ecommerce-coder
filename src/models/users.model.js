@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
   facebookId: Number,
   cartId: mongoose.Schema.Types.ObjectId,
   purchase_history: [{ type: mongoose.Schema.Types.ObjectId, ref: "ticket" }],
+  documents: [{ name: String, reference: String }],
+  personal_documents: [{ name: String, status: Boolean }],
+
+  last_connection: Date,
 });
 
 const Users = mongoose.model(userCollection, userSchema);

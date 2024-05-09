@@ -106,7 +106,6 @@ const addProductToCart = async (
   addProduct
 ) => {
   try {
-    console.log("aca", addProduct);
     if (!addProduct) {
       const product = await getProductById(productId);
       const productOwner = product.owner;

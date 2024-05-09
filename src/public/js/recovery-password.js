@@ -26,7 +26,7 @@ document
         return response.json();
       })
       .then((data) => {
-        console.log("Solicitud enviada con éxito:", data);
+        console.log("Solicitud enviada con éxito");
         // Aquí puedes manejar la respuesta del servidor si es necesario
       })
       .catch((error) => {

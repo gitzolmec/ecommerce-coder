@@ -9,4 +9,13 @@ const formatDate = (date) => {
   return formattedDate;
 };
 
-export { formatDate };
+const formatFileDate = (date) => {
+  const currentDate = moment(date);
+
+  // Formatea la fecha como 'YYYY-MM-DD'
+  const formattedDate = currentDate.format("DD-MM-YYYY");
+
+  return formattedDate;
+};
+
+export { formatDate, formatFileDate };

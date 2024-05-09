@@ -5,6 +5,7 @@ import { useValidPassword, createHash } from "../utils/crypt.password.util.js";
 import { generateToken } from "../utils/jwt.util.js";
 import passportCall from "../utils/passport-call.util.js";
 import ms from "ms";
+import { logout } from "../services/users.service.js";
 const router = Router();
 
 router.post(
@@ -42,8 +43,10 @@ router.get("/fail-login", (req, res) => {
   res.json({ status: "error", error: "Login failed" });
 });
 
-router.get("/logout", (req, res) => {
+router.get("/logout", passportCall("jwt"), async (req, res) => {
   try {
+    const userId = req.user.id;
+    const userLogout = await logout(userId);
     req.logger.info("Sesión destruida");
     res.clearCookie("authToken").redirect("/api/login");
   } catch (error) {
