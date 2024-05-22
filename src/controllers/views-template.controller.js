@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { recoveryPassword, changePassword } from "../services/users.service.js";
+import {
+  recoveryPassword,
+  changePassword,
+  getUserById,
+  enableusers,
+} from "../services/users.service.js";
 import { validateToken } from "../utils/recovery-jwt-util.js";
 
 const router = Router();
@@ -44,6 +49,7 @@ router.post("/passwordrecovery", (req, res) => {
 router.get("/reset-password/:tkn", (req, res) => {
   const token = req.params.tkn;
   const isValid = validateToken(token);
+
   if (isValid) {
     const user = isValid.userInfo;
     const email = user.email;
@@ -67,8 +73,23 @@ router.post("/update-password", async (req, res) => {
   }
 });
 
-router.get("/create/product", (req, res) => {
-  res.render("add-product");
+router.get("/enableaccount/:tkn", async (req, res) => {
+  try {
+    const tokenid = req.params.tkn;
+    const isValid = validateToken(tokenid);
+    if (isValid) {
+      const user = isValid.userInfo;
+      const id = user._id;
+      const userInfo = await getUserById(id);
+      const { _id, email } = userInfo;
+      const status = await enableusers(_id);
+
+      res.render("enable-account");
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error del servidor");
+  }
 });
 
 export { router };

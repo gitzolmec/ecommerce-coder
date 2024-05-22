@@ -4,7 +4,9 @@ import { formatDate } from "../utils/format-date.util.js";
 import { totalQuantity } from "../utils/total-quantity.util.js";
 
 const Users = new UserDao();
-
+const getAllUsers = async () => {
+  return await Users.getAllUsers();
+};
 const getUserById = async (tokenId) => {
   return await Users.getUserById(tokenId);
 };
@@ -20,25 +22,25 @@ const updateUserRole = async (id) => {
   try {
     const user = await Users.getUserById(id);
     const documents = user.personal_documents;
-    console.log(documents);
+
     // Verificar si existen los tres documentos requeridos
     const hasDni = documents.some((doc) => doc.name === "dni");
-    logger.debug(hasDni);
+
     const hasAddressDoc = documents.some(
       (doc) => doc.name === "addressDocument"
     );
-    logger.debug(hasAddressDoc);
+
     const hasAccountDoc = documents.some(
       (doc) => doc.name === "accountDocument"
     );
-    logger.debug(hasAccountDoc);
 
     if (hasDni && hasAddressDoc && hasAccountDoc) {
       const role = user.role === "user" ? "premium" : "user";
-      await Users.updateRole(id, role);
       console.log("Rol actualizado correctamente");
+      return await Users.updateRole(id, role);
     } else {
       console.log("Faltan documentos requeridos");
+      return false;
     }
   } catch (error) {
     console.error("Error al actualizar el rol:", error);
@@ -86,6 +88,16 @@ const logout = async (id) => {
   return await Users.logout(id);
 };
 
+const disableUsers = async () => {
+  return await Users.disableUsers();
+};
+const enableusers = async (id) => {
+  return await Users.enableUsers(id);
+};
+
+const addStatusToUsers = async () => {
+  return await Users.addStatusToUsers();
+};
 export {
   getUserById,
   updateUser,
@@ -97,4 +109,8 @@ export {
   getOwnerInfo,
   updateUserRole,
   logout,
+  getAllUsers,
+  addStatusToUsers,
+  disableUsers,
+  enableusers,
 };

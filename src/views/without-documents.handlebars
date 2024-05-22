@@ -1,0 +1,15 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+ 
+  Swal.fire({
+    title: 'tiene documentos faltantes',
+    text: 'recuerde que para poder subir al rango premium debe subir su documento de identificacion, su estado de cuenta y su comprobante de domicilio ',
+    icon: 'warning',
+    timer: 5000,
+    timerProgressBar: true,
+    didClose: () => {
+      
+      window.location.href = "{{withoutdocumentlink}}";
+    }
+  });
+</script>

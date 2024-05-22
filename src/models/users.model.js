@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   purchase_history: [{ type: mongoose.Schema.Types.ObjectId, ref: "ticket" }],
   documents: [{ name: String, reference: String }],
   personal_documents: [{ name: String, status: Boolean }],
-
+  status: Boolean,
   last_connection: Date,
 });
 

@@ -3,6 +3,7 @@ import { CustomError } from "../handlers/errors/custom.error.js";
 import { unauthorizedToDeleteProduct } from "../handlers/errors/generate-error-info.js";
 import { PRODUCT_ERRORS } from "../handlers/errors/product-error-types.js";
 import { logger } from "../middlewares/logger.middleware.js";
+import { transporter } from "../utils/nodemailer.util.js";
 import { generarCodigoProducto } from "../utils/product-code-generator.util.js";
 import { totalQuantity } from "../utils/total-quantity.util.js";
 import { getUserById, getOwnerInfo } from "./users.service.js";
@@ -124,6 +125,16 @@ const deleteProduct = async (id, req) => {
     return await Products.deleteProduct(id);
   }
   if (user.role === "premium" && product.owner === user.email) {
+    const { first_name, last_name, email } = user;
+    const message = `se elimina producto: ${product.title}`;
+    const MailInfo = await transporter.sendMail({
+      from: '"8-bits 🎮" <jorgemorales.600@gmail.com>',
+      to: email,
+      subject: "Producto eliminado",
+      text: `Hola ${first_name} ${last_name}`,
+      html: message,
+    });
+    logger.info(`Message sent: %s, ${MailInfo.messageId}`);
     return await Products.deleteProduct(id);
   }
   if (user.role === "premium" && product.owner != user.email) {
@@ -144,6 +155,20 @@ const getProductsByOwner = async (email) => {
 };
 
 const deleteProductByOwner = async (id) => {
+  const product = await getProductById(id);
+  const owner = product.owner;
+  const ownerInfo = await getOwnerInfo(owner);
+  const { first_name, last_name, email } = ownerInfo;
+  const message = `se elimina producto: ${product.title}`;
+  const MailInfo = await transporter.sendMail({
+    from: '"8-bits 🎮" <jorgemorales.600@gmail.com>',
+    to: email,
+    subject: "Producto eliminado",
+    text: `Hola ${first_name} ${last_name}`,
+    html: message,
+  });
+  logger.info(`Message sent: %s, ${MailInfo.messageId}`);
+
   return await Products.deleteProduct(id);
 };
 export {

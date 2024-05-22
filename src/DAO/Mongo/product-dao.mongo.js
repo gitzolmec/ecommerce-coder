@@ -1,6 +1,6 @@
 import { logger } from "../../middlewares/logger.middleware.js";
 import { Products } from "../../models/products.model.js";
-import mongoosePaginate from "mongoose-paginate-v2";
+
 import { io } from "../../../app.js";
 class ProductDAO {
   async getProducts(limit, qpage, sort, category) {
@@ -62,7 +62,6 @@ class ProductDAO {
     try {
       if (owner.role === "admin") {
         const products = await Products.find({
-          owner: "admin",
           status: true,
         }).lean();
 
@@ -104,8 +103,6 @@ class ProductDAO {
       { $set: { status: false } }
     );
     const productId = id.toString();
-
-    logger.debug(productId);
 
     io.emit("updateProductByOwner", productId);
     return productList;

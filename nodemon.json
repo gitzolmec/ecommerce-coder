@@ -2,8 +2,7 @@
     "watch": [
         "*.yaml",
         "*.yml",
-        "*.js",
-        "*.handlebars"
+        "*.js"
     ],
-    "ext": "yaml,yml,js,handlebars"
+    "ext": "yaml,yml,js"
 }

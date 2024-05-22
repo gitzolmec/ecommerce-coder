@@ -16,6 +16,7 @@ import { EErrors } from "../handlers/errors/enum.error.js";
 import { CustomError } from "../handlers/errors/custom.error.js";
 import { TYPES_ERRORS } from "../handlers/errors/user-error-types.js";
 import { logger } from "../middlewares/logger.middleware.js";
+import { formatDate } from "../utils/format-date.util.js";
 const carts = new cartDao();
 const LocalStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
@@ -86,6 +87,14 @@ const initializePassport = () => {
             return done(null, false);
           }
 
+          if (usuario.status === false) {
+            logger.warning("Disabled user");
+            return done(null, false);
+          }
+          const id = usuario._id;
+          const lastConnection = await Users.findByIdAndUpdate(id, {
+            last_connection: formatDate(Date.now()),
+          });
           return done(null, usuario);
         } catch (error) {
           done(error);

@@ -33,7 +33,7 @@ const uploadFiles = async (req, res, next) => {
       user.save();
     }
 
-    res.status(200).send("Archivo subido correctamente");
+    res.json({ message: "Archivo cargado con éxito" });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error al subir el archivo");

@@ -7,11 +7,12 @@ import { cartDao } from "./src/DAO/Mongo/cart-dao.mongo.js";
 import { logger } from "./src/middlewares/logger.middleware.js";
 import { deleteProductByOwner } from "./src/services/product.service.js";
 import { addProductToCart } from "./src/services/carts.service.js";
+import { disableUsersCronJob } from "./src/configs/cron.config.js";
 
 const chats = [];
 const chat = new chatDAO();
 const cart = new cartDao();
-
+disableUsersCronJob();
 const httpServer = app.listen(port, () => {
   logger.info(`Servidor escuchando en el puerto ${port}`);
 });
