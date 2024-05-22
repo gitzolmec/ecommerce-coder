@@ -1,4 +1,4 @@
-const socket = io("http://localhost:8080");
+const socket = io();
 
 socket.on("cartUpdated", (cart, totalProducts, view) => {
   const products = cart.products;

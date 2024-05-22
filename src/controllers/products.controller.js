@@ -21,10 +21,6 @@ import { PRODUCT_ERRORS } from "../handlers/errors/product-error-types.js";
 import { EErrors } from "../handlers/errors/enum.error.js";
 import logger from "handlebars";
 
-// Inicialización del ProductManager y definición de rutas
-
-// productManager = await new productDAOfl("controllers/products.json");
-
 // Obtener todos los productos y renderizar la vista home.handlebars
 router.get("/", passportCall("jwt"), async (req, res) => {
   try {
