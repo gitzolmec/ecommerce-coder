@@ -29,13 +29,13 @@ socket.on("ProductDeleted", (productId, totalProducts) => {
   document.getElementById(`product-${productId}`).remove();
   document.getElementById("carritoContenedor").textContent = totalProducts;
 });
-function addProductFromFront(productId, cartId, tokenid) {
+async function addProductFromFront(productId, cartId, tokenid) {
   return addProduct(productId, cartId, tokenid);
 }
-function deleteProductFromFront(productId) {
+async function deleteProductFromFront(productId) {
   return deleteProduct(productId);
 }
-function deleteOneProduct(productId, cartId) {
+async function deleteOneProduct(productId, cartId) {
   return deleteProductById(productId, cartId);
 }
 
