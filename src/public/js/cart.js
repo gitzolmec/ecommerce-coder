@@ -41,8 +41,6 @@ function deleteOneProduct(productId, cartId) {
 
 async function addProduct(productId, cartId, tokenid) {
   try {
-    const socket = io("http://localhost:8080");
-
     const quantity = 1;
     const newProductId = productId;
 
@@ -60,8 +58,6 @@ async function addProduct(productId, cartId, tokenid) {
 
 async function addProductToView(productId, cartId, tokenid) {
   try {
-    const socket = io("http://localhost:8080");
-
     const quantity = 1;
     const newProductId = productId;
     const page = "detailView";
@@ -80,8 +76,6 @@ async function addProductToView(productId, cartId, tokenid) {
 
 async function deleteProduct(productId, cartId) {
   try {
-    const socket = io("http://localhost:8080");
-
     const quantity = 1;
     const newProductId = productId;
 
@@ -95,8 +89,6 @@ async function deleteProduct(productId, cartId) {
 
 async function deleteProductById(productId, cartId) {
   try {
-    const socket = io("http://localhost:8080");
-
     const quantity = 1;
     const newProductId = productId;
     await new Promise((resolve) =>
