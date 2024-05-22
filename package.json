@@ -8,7 +8,7 @@
 		"prodtest": "npx mocha testing/supertest.test.js",
 		"carttest": "npx mocha testing/cart.test.js",
 		"start:dev": "set USER=dev &&  nodemon app.js",
-		"start:prod": "set USER=prod && nodemon app.js"
+		"start:prod": "nodemon app.js"
 	},
 	"keywords": [],
 	"author": "",
