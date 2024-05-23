@@ -1,7 +1,9 @@
 import { expect } from "chai";
 import supertest from "supertest";
 
-const requester = supertest("http://localhost:8080");
+const requester = supertest(
+  "https://ecommerce-coder-production-491e.up.railway.app"
+);
 
 describe("8bits", () => {
   let authTokenCookie;

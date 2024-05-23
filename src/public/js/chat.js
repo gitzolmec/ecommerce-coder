@@ -1,7 +1,7 @@
 // chat.js
 
 document.addEventListener("DOMContentLoaded", function () {
-  const socket = io("http://localhost:8080");
+  const socket = io();
   const chatBox = document.getElementById("chatBox");
   const messageLogs = document.getElementById("messageLogs");
   let username;

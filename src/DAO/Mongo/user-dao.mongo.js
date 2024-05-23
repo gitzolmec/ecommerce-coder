@@ -74,7 +74,7 @@ class UserDao {
     const userInfo = { email, _id };
     const recoveryToken = await generateRecoveryToken({ userInfo });
 
-    const resetLink = `http://localhost:8080/api/reset-password/${recoveryToken}`;
+    const resetLink = `https://ecommerce-coder-production-491e.up.railway.app/api/reset-password/${recoveryToken}`;
     const message = `este es tu link de recuperacion de clave: <a href=${resetLink}>${resetLink}</a>`;
     const MailInfo = await transporter.sendMail({
       from: '"8-bits 🎮" <jorgemorales.600@gmail.com>',
@@ -125,11 +125,12 @@ class UserDao {
 
   async disableUsers() {
     try {
-      const mediaHoraAtras = new Date(Date.now() - 30 * 60 * 1000);
+      const dosDiasAtras = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+
       const userList = await Users.find();
       const result = await Users.updateMany(
         {
-          last_connection: { $lt: mediaHoraAtras },
+          last_connection: { $lt: dosDiasAtras },
           role: { $ne: "admin" },
         },
         { $set: { status: false } }
@@ -140,7 +141,7 @@ class UserDao {
         const { first_name, last_name, email, _id } = user;
         const userInfo = { email, _id };
         const enableAccountToken = await generateRecoveryToken({ userInfo });
-        const enableAccountLink = `http://localhost:8080/api/enableaccount/${enableAccountToken}`;
+        const enableAccountLink = `https://ecommerce-coder-production-491e.up.railway.app/api/enableaccount/${enableAccountToken}`;
         const message = `Su cuenta ha sido deshabilitada por inactividad, para reactivar su cuenta siga el siguiente link: <a href=${enableAccountLink}>Link de reactivacion</a>`;
         const originalUser = userList.find((users) => users.id === user.id);
         if (user.status !== originalUser.status) {

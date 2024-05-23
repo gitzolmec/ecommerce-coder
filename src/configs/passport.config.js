@@ -109,7 +109,8 @@ const initializePassport = () => {
       {
         clientID: ghClientId,
         clientSecret: ghClientSecret,
-        callbackURL: "http://localhost:8080/api/auth/githubcallback",
+        callbackURL:
+          "https://ecommerce-coder-production-491e.up.railway.app/api/auth/githubcallback",
       },
       async (accessToken, RefreshToken, profile, done) => {
         try {

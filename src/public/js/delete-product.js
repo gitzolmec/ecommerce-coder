@@ -1,7 +1,6 @@
-const socket = io("http://localhost:8080");
+const socket = io();
 
 function deleteProduct(productId) {
-  const socket = io("http://localhost:8080");
   socket.emit("deleteProduct", { productId });
 }
 
