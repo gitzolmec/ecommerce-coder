@@ -67,7 +67,6 @@ router.get(
   }),
   async (req, res) => {
     const token = generateToken({ id: req.user._id, role: req.user.role });
-    const ms = await import("ms");
 
     const horaEnMilisegundos = ms("1h");
     res
