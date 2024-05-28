@@ -52,8 +52,8 @@ const errorHandler = (err, res) => {
           quantity: p.quantity,
         }));
         const calculateTotal = totalPrice(products);
-        const price = calculateTotal.finalTotal;
-        const unitPrice = calculateTotal.totalunitario;
+        const price = calculateTotal.totalPrice;
+        const unitPrice = calculateTotal.itemTotal;
         products.forEach((p, index) => {
           p.unitPrice = unitPrice[index];
         });

@@ -2,19 +2,28 @@ const socket = io();
 
 socket.on("cartUpdated", (Cart, totalProducts, total, view) => {
   const products = Cart.products;
-  console.log(products);
+
   if (view) {
     document.getElementById("carritoContenedor").textContent = totalProducts;
 
-    products.forEach((product) => {
+    products.forEach((product, index) => {
       const quantity = document.getElementById(`quantity-${product.id}`);
+
       if (quantity) {
         quantity.textContent = product.quantity;
       }
+
+      const priceForOne = document.getElementById(
+        `totalUnitPrice-${product.id}`
+      );
+      if (priceForOne) {
+        priceForOne.textContent = total.itemTotal[index];
+      }
     });
     const totalprice = document.getElementById("total");
+
     if (totalprice) {
-      totalprice.textContent = total.finalTotal;
+      totalprice.textContent = total.totalPrice;
     }
 
     return;
@@ -36,11 +45,22 @@ socket.on("oneProductDeleted", (cart, totalProducts, total) => {
   document.getElementById("carritoContenedor").textContent = totalProducts;
   const totalprice = document.getElementById("total");
   if (totalprice) {
-    totalprice.textContent = total.finalTotal;
+    totalprice.textContent = total.totalPrice;
   }
 });
 
 socket.on("ProductDeleted", (productId, totalProducts) => {
+  const totalprice = parseFloat(
+    document.getElementById("total").textContent.replace(/[^\d.-]/g, "")
+  );
+  const priceForOne = parseFloat(
+    document
+      .getElementById(`totalUnitPrice-${productId}`)
+      .textContent.replace(/[^\d.-]/g, "")
+  );
+
+  const newTotalPrice = totalprice - priceForOne;
+  document.getElementById("total").textContent = `$${newTotalPrice.toFixed(2)}`;
   document.getElementById(`product-${productId}`).remove();
   document.getElementById("carritoContenedor").textContent = totalProducts;
 });

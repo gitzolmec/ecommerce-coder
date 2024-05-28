@@ -1,16 +1,17 @@
 function totalPrice(products) {
-  let finalTotal = 0;
-  let totalunitario = [];
+  let totalPrice = 0;
+  let itemTotal = [];
 
   products.forEach((product) => {
-    const productTotal = product.price * product.quantity;
-    totalunitario.push(productTotal);
-    finalTotal += productTotal;
+    let productTotal = product.price * product.quantity;
+    productTotal = parseFloat(productTotal.toFixed(2));
+    itemTotal.push(productTotal);
+    totalPrice += productTotal;
   });
 
-  finalTotal = parseFloat(finalTotal.toFixed(2));
+  totalPrice = parseFloat(totalPrice.toFixed(2));
 
-  return { finalTotal, totalunitario };
+  return { totalPrice, itemTotal };
 }
 
 export default totalPrice;

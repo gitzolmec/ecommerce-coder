@@ -138,7 +138,6 @@ const addProductToCart = async (
         quantity: p.quantity,
       }));
       const total = totalPrice(cartWithDetails);
-      const { finalTotal, totalunitario } = totalPrice(cartWithDetails);
 
       io.emit("cartUpdated", Cart, totalProducts, total, view);
       return Cart;
