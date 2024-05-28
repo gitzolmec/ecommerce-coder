@@ -34,7 +34,7 @@ class cartDao {
   async addProductToCart(cartId, productId, quantity, view) {
     try {
       // Buscar el carrito por ID
-      console.log("carrito: ", cartId);
+
       const cart = await Carts.findOne({ _id: cartId });
 
       if (!cart) {
@@ -56,6 +56,7 @@ class cartDao {
       // Guardar el carrito actualizado en la base de datos
       await cart.save();
       logger.info("Producto agregado al carrito");
+      return cart;
     } catch (error) {
       logger.error("Error al agregar el producto al carrito: ", error);
       throw new Error("Error al agregar el producto al carrito");
@@ -118,9 +119,8 @@ class cartDao {
           this.deleteProductFromCart(cartId, productId);
         }
         await cart.save();
-        const totalProducts = await totalQuantity(cartId);
 
-        io.emit("oneProductDeleted", cart, totalProducts);
+        return cart;
       } else {
         throw new Error("Producto no encontrado en el carrito");
       }

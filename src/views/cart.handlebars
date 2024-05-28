@@ -34,16 +34,16 @@
                     Mis Compras
                   </a>
                 </li>
-                    <li class="nav-item">
-                    <a href="/api/users/premium/{{tokenId}}" class="nav-link">
-                      Cambio de Rol
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="/api/users/{{tokenId}}/documents" class="nav-link">
-                      Subir documentos
-                    </a>
-                  </li>
+                <li class="nav-item">
+                  <a href="/api/users/premium/{{tokenId}}" class="nav-link">
+                    Cambio de Rol
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="/api/users/{{tokenId}}/documents" class="nav-link">
+                    Subir documentos
+                  </a>
+                </li>
                 {{/isEqualOr}}
 
                 <li class="nav-item">
@@ -138,10 +138,13 @@
           Nombre
         </th>
         <th>
-          Precio
+          Precio unitario
         </th>
         <th>
           Cantidad
+        </th>
+        <th>
+          Precio total
         </th>
         <th>
           Acciones
@@ -176,12 +179,20 @@
           </button>
         </td>
         <td>
+          {{this.unitPrice}}
+        </td>
+        <td>
           <button class="btn btn-danger" onclick="deleteProduct('{{this._id}}','{{../cartId}}')">
             Eliminar
           </button>
         </td>
       </tr>
       {{/each}}
+      <tr>
+        <td colspan="5" class="text-right">TOTAL A PAGAR</td>
+        <td id="total" class="text-center">${{price}}</td>
+      </tr>
+
     </tbody>
   </table>
 </div>

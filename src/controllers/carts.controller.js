@@ -18,6 +18,7 @@ import {
   checkoutCart,
 } from "../services/carts.service.js";
 import { userAuthMiddleware } from "../middlewares/user-validation.middleware.js";
+import totalPrice from "../utils/total-price.util.js";
 
 const errorHandler = (err, res) => {
   console.error("Error:", err);
@@ -50,8 +51,13 @@ const errorHandler = (err, res) => {
           ...p.id,
           quantity: p.quantity,
         }));
+        const calculateTotal = totalPrice(products);
+        const price = calculateTotal.finalTotal;
+        const unitPrice = calculateTotal.totalunitario;
+        products.forEach((p, index) => {
+          p.unitPrice = unitPrice[index];
+        });
 
-        req.logger.debug(adminValidation);
         res.render("cart.handlebars", {
           products,
           cartId,
@@ -61,6 +67,8 @@ const errorHandler = (err, res) => {
           adminValidation,
           role,
           tokenId,
+          price,
+          unitPrice,
         });
       } else {
         res.status(404).json({ error: "Carrito no encontrado" });
@@ -175,7 +183,7 @@ const errorHandler = (err, res) => {
       }
 
       const ticket = await createTicket(req, totalprice, purchaseDetails);
-      res.redirect("/api/products");
+      res.render("success-purchase");
     } catch (err) {
       req.logger.error("Error al completar la compra", err);
       errorHandler(err, res);

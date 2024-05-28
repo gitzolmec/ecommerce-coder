@@ -29,7 +29,7 @@ const initializePassport = () => {
       async (req, username, password, done) => {
         try {
           const { first_name, last_name, email, age } = req.body;
-          console.log(age);
+
           if (!first_name || !last_name || !email || !age) {
             CustomError.createError({
               name: TYPES_ERRORS.USER_CREATION_ERROR,

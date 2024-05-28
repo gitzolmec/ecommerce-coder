@@ -87,7 +87,7 @@ router.get("/enableaccount/:tkn", async (req, res) => {
       res.render("enable-account");
     }
   } catch (error) {
-    console.log(error);
+    req.logger.error(error);
     res.status(500).send("Error del servidor");
   }
 });

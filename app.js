@@ -6,7 +6,11 @@ import { cartDao } from "./src/DAO/Mongo/cart-dao.mongo.js";
 
 import { logger } from "./src/middlewares/logger.middleware.js";
 import { deleteProductByOwner } from "./src/services/product.service.js";
-import { addProductToCart } from "./src/services/carts.service.js";
+import {
+  addProductToCart,
+  deleteProductFromCart,
+  updateProductQuantityInCart,
+} from "./src/services/carts.service.js";
 import { disableUsersCronJob } from "./src/configs/cron.config.js";
 
 const chats = [];
@@ -48,12 +52,12 @@ io.on("connection", (socket) => {
   );
 
   socket.on("deleteProd", async ({ cartId, newProductId }) => {
-    await cart.deleteProductFromCart(cartId, newProductId);
+    await deleteProductFromCart(cartId, newProductId);
   });
   socket.on(
     "deleteProductFromView",
     async ({ cartId, newProductId, quantity }) => {
-      await cart.updateProductQuantityInCart(cartId, newProductId, quantity);
+      await updateProductQuantityInCart(cartId, newProductId, quantity);
     }
   );
   socket.on("deleteProduct", async ({ productId }) => {

@@ -9,7 +9,7 @@ const mongoConnect = async () => {
     );
     logger.info("Connected to DB");
   } catch (err) {
-    console.log(err);
+    logger.error(err);
   }
 };
 

@@ -10,6 +10,7 @@ import { addingOwnProduct } from "../handlers/errors/generate-error-info.js";
 import { CustomError } from "../handlers/errors/custom.error.js";
 import { EErrors } from "../handlers/errors/enum.error.js";
 import { io } from "../../app.js";
+import totalPrice from "../utils/total-price.util.js";
 
 const cart = new cartDao();
 
@@ -89,12 +90,21 @@ const updateCartWithProductList = async (cartId, productList) => {
 };
 
 const updateProductQuantityInCart = async (cartId, productId, quantity) => {
-  const cart = await cart.updateProductQuantityInCart(
+  const updateCart = await cart.updateProductQuantityInCart(
     cartId,
     productId,
     quantity
   );
-  return cart;
+  const totalProducts = await totalQuantity(cartId);
+  logger.info(totalProducts);
+  const cartWithoutDetails = await getCartById(cartId);
+  const cartWithDetails = cartWithoutDetails.products.map((p) => ({
+    ...p.id,
+    quantity: p.quantity,
+  }));
+  const total = totalPrice(cartWithDetails);
+  io.emit("oneProductDeleted", updateCart, totalProducts, total);
+  return updateCart;
 };
 
 const addProductToCart = async (
@@ -122,8 +132,15 @@ const addProductToCart = async (
       }
       const Cart = await cart.addProductToCart(cartId, productId, quantity);
       const totalProducts = await totalQuantity(cartId);
+      const cartWithoutDetails = await getCartById(cartId);
+      const cartWithDetails = cartWithoutDetails.products.map((p) => ({
+        ...p.id,
+        quantity: p.quantity,
+      }));
+      const total = totalPrice(cartWithDetails);
+      const { finalTotal, totalunitario } = totalPrice(cartWithDetails);
 
-      io.emit("cartUpdated", cart, totalProducts, view);
+      io.emit("cartUpdated", Cart, totalProducts, total, view);
       return Cart;
     } else {
       const cartId = addProduct.cartId;

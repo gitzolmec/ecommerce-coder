@@ -1,28 +1,43 @@
 const socket = io();
 
-socket.on("cartUpdated", (cart, totalProducts, view) => {
-  const products = cart.products;
+socket.on("cartUpdated", (Cart, totalProducts, total, view) => {
+  const products = Cart.products;
+  console.log(products);
   if (view) {
     document.getElementById("carritoContenedor").textContent = totalProducts;
+
+    products.forEach((product) => {
+      const quantity = document.getElementById(`quantity-${product.id}`);
+      if (quantity) {
+        quantity.textContent = product.quantity;
+      }
+    });
+    const totalprice = document.getElementById("total");
+    if (totalprice) {
+      totalprice.textContent = total.finalTotal;
+    }
+
     return;
   }
-
   products.forEach((product) => {
     document.getElementById(`quantity-${product.id}`).textContent =
       product.quantity;
   });
-
   document.getElementById("carritoContenedor").textContent = totalProducts;
 });
 
-socket.on("oneProductDeleted", (cart, totalProducts) => {
+socket.on("oneProductDeleted", (cart, totalProducts, total) => {
   const Products = cart.products;
-
+  console.log(Products);
   Products.forEach((product) => {
     document.getElementById(`quantity-${product.id}`).textContent =
       product.quantity;
   });
   document.getElementById("carritoContenedor").textContent = totalProducts;
+  const totalprice = document.getElementById("total");
+  if (totalprice) {
+    totalprice.textContent = total.finalTotal;
+  }
 });
 
 socket.on("ProductDeleted", (productId, totalProducts) => {

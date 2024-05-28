@@ -36,10 +36,10 @@ const updateUserRole = async (id) => {
 
     if (hasDni && hasAddressDoc && hasAccountDoc) {
       const role = user.role === "user" ? "premium" : "user";
-      console.log("Rol actualizado correctamente");
+      logger.info("Rol actualizado correctamente");
       return await Users.updateRole(id, role);
     } else {
-      console.log("Faltan documentos requeridos");
+      logger.info("Faltan documentos requeridos");
       return false;
     }
   } catch (error) {

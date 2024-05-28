@@ -24,7 +24,7 @@ router.get("/", passportCall("jwt"), async (req, res) => {
 
     res.json({ users });
   } catch (error) {
-    console.log(error);
+    req.logger.error(error);
     res
       .status(500)
       .json({ status: "success", message: "Internal Server Error" });
@@ -42,7 +42,7 @@ router.post(
 
       res.json({ status: "success", redirectURL });
     } catch (error) {
-      console.log(error);
+      req.logger.error(error);
       res
         .status(500)
         .json({ status: "success", message: "Internal Server Error" });
@@ -64,7 +64,7 @@ router.get(
 
       res.render("users-list.handlebars", { list, userInfoDto });
     } catch (error) {
-      console.log(error);
+      req.logger.error(error);
       res
         .status(500)
         .json({ status: "error", message: "Internal Server Error" });

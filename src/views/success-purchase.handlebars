@@ -1,0 +1,15 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+ 
+  Swal.fire({
+    title: 'Compra Exitosa',
+    text: 'esta siendo redirigido a la pagina principal, los detalles de la compra llegaran a su correo',
+    icon: 'success',
+    timer: 5000,
+    timerProgressBar: true,
+    didClose: () => {
+      
+      window.location.href = '/api/products';
+    }
+  });
+</script>

@@ -444,7 +444,7 @@ router.get(
         tokenid,
       });
     } catch (err) {
-      console.log(err);
+      req.logger.error(err);
     }
   }
 );
