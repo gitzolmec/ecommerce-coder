@@ -96,7 +96,7 @@ const updateProductQuantityInCart = async (cartId, productId, quantity) => {
     quantity
   );
   const totalProducts = await totalQuantity(cartId);
-  logger.info(totalProducts);
+
   const cartWithoutDetails = await getCartById(cartId);
   const cartWithDetails = cartWithoutDetails.products.map((p) => ({
     ...p.id,

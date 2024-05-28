@@ -37,10 +37,15 @@ socket.on("cartUpdated", (Cart, totalProducts, total, view) => {
 
 socket.on("oneProductDeleted", (cart, totalProducts, total) => {
   const Products = cart.products;
-  console.log(Products);
-  Products.forEach((product) => {
+
+  Products.forEach((product, index) => {
     document.getElementById(`quantity-${product.id}`).textContent =
       product.quantity;
+
+    const priceForOne = document.getElementById(`totalUnitPrice-${product.id}`);
+    if (priceForOne) {
+      priceForOne.textContent = total.itemTotal[index];
+    }
   });
   document.getElementById("carritoContenedor").textContent = totalProducts;
   const totalprice = document.getElementById("total");
