@@ -12,6 +12,10 @@
 - **Cambio de rol a premium** mediante la presentación de comprobante de identificación, estado de cuenta y comprobante de domicilio.
 - **Notificaciones por email** con la información de la compra realizada.
 
+## Demo
+
+Puedes ver el proyecto en vivo desplegado en Railway [Link](https://ecommerce-coder-production-491e.up.railway.app/api/login).
+
 ## Requisitos previos
 
 - Node.js versión 14 o superior.
@@ -21,11 +25,11 @@
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tuusuario/8bits.git
+   git clone https://github.com/gitzolmec/ecommerce-coder.git
    ```
 2. Navega al directorio del proyecto:
    ```bash
-   cd 8bits
+   cd ecommerce-coder
    ```
 3. Instala las dependencias:
    ```bash
@@ -36,41 +40,44 @@
 
 1. Inicia el servidor:
    ```bash
-   npm start
+   npm run start:prod
    ```
-2. Abre tu navegador y navega a `http://localhost:3000`.
-
-## Contribución
-
-Para contribuir a este proyecto, sigue estos pasos:
-
-1. Haz un fork del repositorio.
-2. Crea una nueva rama (`git checkout -b feature/nueva-feature`).
-3. Realiza tus cambios y haz commit (`git commit -m 'Añadir nueva feature'`).
-4. Haz push a la rama (`git push origin feature/nueva-feature`).
-5. Abre un Pull Request.
-
-## Licencia
-
-Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para obtener más detalles.
+2. Abre tu navegador y navega a `http://localhost:8080/api/login`.
 
 ## Contacto
 
 Para preguntas, sugerencias o comentarios, puedes contactarnos a través de:
 
-- Correo electrónico: contacto@8bits.com
-- Twitter: [@8bitsEcommerce](https://twitter.com/8bitsEcommerce)
+- Correo electrónico: jorgemorales.600@gmail.com
 
-## Capturas de pantalla
-
-### Página principal
-
-![Página principal](https://raw.githubusercontent.com/gitzolmec/ecommerce-coder/main/src/public/img/DMC5.jpeg)
-
-### Carrito de compra
-
-![Carrito de compra](https://via.placeholder.com/800x600)
+## Navegando por el proyecto
 
 ### Login de usuario
 
-![Login de usuario](https://via.placeholder.com/800x600)
+![Login de usuario](https://imgur.com/oaTzkml.jpeg)
+
+En esta pantalla se realiza el login de usuario, puedes hacer un registro con tus datos o con github
+
+### Registro
+
+![Página de registro](https://imgur.com/CyHqvSC.jpeg)
+
+### Página principal
+
+![Página principal](https://imgur.com/wm9Dty0.jpeg)
+
+Esta es la pantalla principal con el catalogo de video juegos disponibles, si se preciona la foto de algun producto se redirige a la pantalla del detalle de cada producto donde podra agregarlo al carrito.
+
+### Detalle de producto
+
+![Detalle del producto](https://imgur.com/865WHu0.jpeg)
+
+### Carrito de compra
+
+![Carrito de compra](https://imgur.com/rhplQBG.jpeg)
+
+### Compra exitosa
+
+![Compra exitosa](https://imgur.com/IgRINHd.jpeg)
+
+El mensaje en la imagen aparecera al realizar una compra exitosa.
